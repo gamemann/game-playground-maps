@@ -80,13 +80,129 @@ def wall_tops(size, top_y, why):
     ]
 
 
-def doc(id_, name, blurb, spawn, spawn_yaw, boxes, declared, tier=1):
-    return {
+def doc(id_, name, blurb, spawn, spawn_yaw, boxes, declared, tier=1, props=None, wires=None):
+    d = {
         "format": 1, "kind": "playground_map", "id": id_, "name": name, "blurb": blurb,
         "map_kind": "sandbox", "tier": tier, "author": AUTHOR,
         "spawn": [r(c) for c in spawn], "spawn_yaw": spawn_yaw,
         "boxes": boxes, "declared": declared,
     }
+    if props:
+        d["props"] = props
+    if wires:
+        d["wires"] = wires
+    return d
+
+
+# --- Props ---------------------------------------------------------------------------------
+#
+# A map's props are catalogue ids game-playground puts down when the map loads (pg_data.gd's
+# `props`). `at` is the body's centre, so a prop standing on a floor at y is at y + half its
+# height. Frozen unless loose=True: furniture that falls over on load is not furniture.
+
+HALF_HEIGHT = {
+    "plank": 0.075, "beam": 0.2, "panel": 0.05, "slab": 0.3, "pillar": 2.0, "platform": 0.2,
+    "crate": 0.5, "crate_large": 1.0, "barrel": 0.7, "can": 0.25, "ball": 0.5,
+    "beach_ball": 1.2, "boulder": 1.5, "die": 0.4, "button": 0.3, "lever": 0.45, "door": 1.3,
+    "buggy": 0.9,
+}
+
+
+def prop(id_, x, floor_y, z, yaw=0.0, loose=False, tint=None, scale=None, physics=None, lift=0.0):
+    """A prop standing on a floor at floor_y (lift raises it, for a button on a wall)."""
+    p = {"id": id_, "at": [r(x), r(floor_y + HALF_HEIGHT.get(id_, 0.5) * (scale or 1.0) + lift), r(z)]}
+    if yaw:
+        p["yaw"] = r(yaw)
+    if loose:
+        p["frozen"] = False
+    if tint:
+        p["tint"] = tint
+    if scale:
+        p["scale"] = scale
+    if physics:
+        p["physics"] = physics
+    return p
+
+
+def wire(frm, out, to, in_):
+    return {"from": frm, "out": out, "to": to, "in": in_}
+
+
+# --- Geometry beyond axis-aligned ramps ------------------------------------------------------
+
+def _qmul(a, b):
+    ax, ay, az, aw = a
+    bx, by, bz, bw = b
+    return (aw * bx + ax * bw + ay * bz - az * by,
+            aw * by - ax * bz + ay * bw + az * bx,
+            aw * bz + ax * by - ay * bx + az * bw,
+            aw * bw - ax * bx - ay * by - az * bz)
+
+
+def _rotate(q, v):
+    x, y, z, w = q
+    p = _qmul(_qmul(q, (v[0], v[1], v[2], 0.0)), (-x, -y, -z, w))
+    return p[:3]
+
+
+def _turn_of(q):
+    x, y, z, w = q
+    w = max(-1.0, min(1.0, w))
+    angle = 2.0 * math.acos(w)
+    sin_half = math.sqrt(max(0.0, 1.0 - w * w))
+    if sin_half < 1e-6:
+        return None
+    return (x / sin_half, y / sin_half, z / sin_half, math.degrees(angle))
+
+
+def bridge(p0, p1, width, colour="ramp", thickness=0.5):
+    """A slab whose TOP surface runs along the line p0 -> p1 in any direction: a sloped bridge
+    or ramp. Yawed to the line, then pitched, then dropped along its own normal by half its
+    thickness, so its surface passes through both points exactly (ramp_z's rule)."""
+    dx, dy, dz = (p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2])
+    flat = math.hypot(dx, dz)
+    length = math.hypot(flat, dy)
+    yaw = math.atan2(dx, dz)
+    pitch = -math.atan2(dy, flat)
+    q = _qmul((0.0, math.sin(yaw / 2), 0.0, math.cos(yaw / 2)), (math.sin(pitch / 2), 0.0, 0.0, math.cos(pitch / 2)))
+    normal = _rotate(q, (0.0, 1.0, 0.0))
+    mid = ((p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2, (p0[2] + p1[2]) / 2)
+    centre = tuple(mid[i] - normal[i] * thickness / 2.0 for i in range(3))
+    return box(centre, (width, thickness, length), colour, _turn_of(q))
+
+
+def building(cx, cz, w, d, h, door_side, colour, wall=0.4, door_w=2.4, door_h=2.8, roof=True):
+    """Four walls with a doorway in one ("s" -Z, "n" +Z, "w" -X, "e" +X), a lintel over it and
+    a flat roof at h. Returns (boxes, door_centre (x, z), door_yaw, inward (dx, dz))."""
+    out = []
+    y = h / 2.0
+    hw, hd = w / 2.0, d / 2.0
+    sides = {
+        "s": ((cx, cz - hd + wall / 2), "x", w, (0, 1)),
+        "n": ((cx, cz + hd - wall / 2), "x", w, (0, -1)),
+        "w": ((cx - hw + wall / 2, cz), "z", d, (1, 0)),
+        "e": ((cx + hw - wall / 2, cz), "z", d, (-1, 0)),
+    }
+    door = None
+    for name, (centre, along, span, inward) in sides.items():
+        if name != door_side:
+            size = (span, h, wall) if along == "x" else (wall, h, span)
+            out.append(box((centre[0], y, centre[1]), size, colour))
+            continue
+        piece = (span - door_w) / 2.0
+        for side in (-1, 1):
+            off = side * (door_w / 2.0 + piece / 2.0)
+            if along == "x":
+                out.append(box((centre[0] + off, y, centre[1]), (piece, h, wall), colour))
+            else:
+                out.append(box((centre[0], y, centre[1] + off), (wall, h, piece), colour))
+        lintel_h = h - door_h
+        ly = door_h + lintel_h / 2.0
+        out.append(box((centre[0], ly, centre[1]), (door_w, lintel_h, wall) if along == "x" else (wall, lintel_h, door_w), colour))
+        door = (centre, 0.0 if along == "x" else 90.0, inward)
+    if roof:
+        out.append(box((cx, h + 0.15, cz), (w, 0.3, d), "platform"))
+    return out, door[0], door[1], door[2]
 
 
 # --- Build Plots ---------------------------------------------------------------------------
@@ -205,11 +321,149 @@ def slopes():
                (0, 1, 80), 0.0, boxes, declared)
 
 
+def tree(x, z, floor_y=0.0, height=3.0, canopy=3.2):
+    """A trunk and a block of leaves. The leaves' top is somewhere nobody walks to."""
+    boxes = [box((x, floor_y + height / 2.0, z), (0.6, height, 0.6), "#6b4a2a"),
+             box((x, floor_y + height + canopy * 0.4, z), (canopy, canopy * 0.8, canopy), "#3e7a3a")]
+    top = floor_y + height + canopy * 0.8
+    declared = [{"min": [r(x - canopy / 2), r(top - 0.2), r(z - canopy / 2)],
+                 "max": [r(x + canopy / 2), r(top + 0.5), r(z + canopy / 2)], "why": "a tree's leaves"}]
+    return boxes, declared
+
+
+def lamp(x, z, floor_y=0.0):
+    """A 4.5 m post with a lamp head 4.7 m up. Returns (boxes, declared)."""
+    return ([box((x, floor_y + 2.25, z), (0.25, 4.5, 0.25), "#3a3d42"),
+             box((x, floor_y + 4.6, z), (0.5, 0.2, 0.5), "#e8d9a0")],
+            [{"min": [r(x - 0.25), r(floor_y + 4.5), r(z - 0.25)], "max": [r(x + 0.25), r(floor_y + 5.2), r(z + 0.25)],
+              "why": "a lamp's head"}])
+
+
+# --- Town ----------------------------------------------------------------------------------
+
+ROAD = "#3a3d42"
+KERB = "#8c8f94"
+
+
+def town():
+    size, wall_h = 200.0, 8.0
+    boxes = [box((0, -0.5, 0), (size, 1, size), "#4f6b45")]
+    boxes += walls(size, wall_h, colour="#6d7480")
+    declared = wall_tops(size, wall_h, "the town's outer walls, 8 m up")
+    props, wires = [], []
+
+    # Two roads crossing in the middle, 14 m wide, with a 0.15 m pavement (a step) either side.
+    for along in ("x", "z"):
+        if along == "x":
+            boxes.append(box((0, 0.01, 0), (size - 2, 0.02, 14), ROAD))
+        else:
+            # A hair higher than the other road, so the crossing is one surface and not two
+            # fighting for the same depth.
+            boxes.append(box((0, 0.0125, 0), (14, 0.025, size - 2), ROAD))
+    # The plaza on the north-east block: a fountain (a 0.5 m ring, a 2.5 m column), benches.
+    px, pz = 45.0, 45.0
+    boxes.append(box((px, 0.075, pz), (70, 0.15, 70), KERB))
+    for side in (-1, 1):
+        boxes.append(box((px + side * 4.75, 0.4, pz), (0.5, 0.5, 10), "#9aa3ad"))
+        boxes.append(box((px, 0.4, pz + side * 4.75), (9, 0.5, 0.5), "#9aa3ad"))
+    boxes.append(box((px, 1.4, pz), (1.2, 2.5, 1.2), "#9aa3ad"))
+    declared.append({"min": [px - 0.6, 2.5, pz - 0.6], "max": [px + 0.6, 3.0, pz + 0.6],
+                     "why": "the top of the fountain's column, 2.5 m up"})
+    for at in ((px - 14, pz - 14), (px + 14, pz - 14), (px - 14, pz + 14), (px + 14, pz + 14)):
+        boxes.append(box((at[0], 0.4, at[1]), (3, 0.5, 0.8), "#7b5a3a"))
+    for i, at in enumerate(((px - 6, pz - 9), (px + 7, pz + 9), (px + 9, pz - 6))):
+        props.append(prop("beach_ball", at[0], 0.15, at[1], loose=True))
+    # Trees round the plaza's edge, and a stage on its far side: 0.9 m, up two 0.45 m steps
+    # on each end. (0.45 is over a walk's 0.4 step, so it is a hop, which a stage is.)
+    for i in range(6):
+        for at in ((px - 30 + i * 12, pz - 30), (px - 30 + i * 12, pz + 30)):
+            b, dcl = tree(at[0], at[1], 0.15)
+            boxes += b
+            declared += dcl
+    sx_, sz_ = px, pz + 22
+    boxes.append(box((sx_, 0.15 + 0.45, sz_), (16, 0.9, 6), "#7b5a3a"))
+    for side in (-1, 1):
+        boxes.append(box((sx_ + side * 9.0, 0.15 + 0.225, sz_), (2, 0.45, 4), "#7b5a3a"))
+    # Market stalls along the west of the plaza: a counter and its goods, loose.
+    for i in range(3):
+        mz = pz - 14 + i * 12
+        boxes.append(box((px - 24, 0.15 + 0.5, mz), (2, 1.0, 5), "#a55b3b"))
+        props.append(prop("crate", px - 24, 1.15, mz - 1.5, loose=True))
+        props.append(prop("can", px - 24, 1.15, mz, loose=True))
+        props.append(prop("die", px - 24, 1.15, mz + 1.5, loose=True))
+    # Street trees and lamps down both roads, on the verges.
+    for k in range(-4, 5):
+        if k == 0:
+            continue
+        t = k * 20.0
+        for side in (-1, 1):
+            if not (t > 8 and side > 0):
+                b, dcl = tree(t, side * 11.0)
+                boxes += b
+                declared += dcl
+            if abs(t + 10.0) < 95:
+                b, dcl = lamp(side * 9.0, t + 10.0)
+                boxes += b
+                declared += dcl
+
+    # Buildings: each enterable through a door wired to a button outside and inside, and a
+    # ramp up the outside to its roof. (block centre, size, height, door side, colour)
+    houses = [
+        ((-45, 30), (22, 16), 6.0, "s", "#a55b3b"),
+        ((-45, 65), (18, 14), 9.0, "e", "#c2a23a"),
+        ((-30, -45), (26, 18), 7.0, "n", "#3b6ea5"),
+        ((-65, -45), (14, 22), 5.0, "e", "#5f9e4f"),
+        ((40, -40), (30, 20), 6.0, "w", "#8d5fa8"),
+    ]
+    for (cx, cz), (w, d), h, door_side, colour in houses:
+        boxes.append(box((cx, 0.075, cz), (w + 8, 0.15, d + 8), KERB))
+        built, door_at, door_yaw, inward = building(cx, cz, w, d, h, door_side, colour)
+        for b in built:
+            # Up onto the pavement: every wall stands on it.
+            b["at"][1] = r(b["at"][1] + 0.15)
+        boxes += built
+        # The roof ramp, along the side wall away from the north-south road, rising toward the
+        # road so its foot is out past the far side; it ends on a post touching the wall, whose
+        # top is level with the roof (no gap: a gap beside a wall is a slot).
+        sx = 1.0 if cx > 0 else -1.0
+        sz = 1.0 if cz > 0 else -1.0
+        roof_top = h + 0.45
+        rx = cx + sx * (w / 2.0 + 1.8)
+        top_z = cz - sz * (d / 2.0 - 3.0)
+        run = max(roof_top * 1.9, d - 3.0 + 4.5)
+        boxes.append(ramp_z(rx, top_z + sz * run, 0.0, top_z, roof_top, 3.6))
+        boxes.append(box((rx, roof_top / 2.0, top_z - sz * 1.5), (3.6, roof_top, 3.0), colour))
+        # The door in its doorway, a button either side of it 1.6 m along the wall.
+        n = len(props)
+        props.append(prop("door", door_at[0], 0.15, door_at[1], yaw=door_yaw))
+        along = (1, 0) if door_yaw == 0.0 else (0, 1)
+        out_x = door_at[0] - inward[0] * 0.33 + along[0] * 1.9
+        out_z = door_at[1] - inward[1] * 0.33 + along[1] * 1.9
+        in_x = door_at[0] + inward[0] * 0.33 - along[0] * 1.9
+        in_z = door_at[1] + inward[1] * 0.33 - along[1] * 1.9
+        props.append(prop("button", out_x, 0.15, out_z, yaw=door_yaw, lift=1.0))
+        props.append(prop("button", in_x, 0.15, in_z, yaw=door_yaw, lift=1.0))
+        wires.append(wire(n + 1, "pressed", n, "toggle"))
+        wires.append(wire(n + 2, "pressed", n, "toggle"))
+        # Something inside to find.
+        props.append(prop("crate", cx + 2, 0.15, cz, loose=True))
+        props.append(prop("crate", cx + 2, 1.15, cz, loose=True))
+        props.append(prop("barrel", cx - 3, 0.15, cz + 2, loose=True))
+
+    # A car park in the south-east block with two buggies.
+    boxes.append(box((50, 0.03, -80), (40, 0.06, 16), "#2e3136"))
+    for x in (40, 52):
+        props.append(prop("buggy", x, 0.06, -80, loose=True))
+    return doc("pgc_town", "Town",
+               "Two roads, a fountain plaza, five buildings with doors on buttons and ramps to their roofs, and a car park.",
+               (0, 1, 80), 0.0, boxes, declared, props=props, wires=wires)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry(), slopes()):
+    for d in (plots(), quarry(), slopes(), town()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:

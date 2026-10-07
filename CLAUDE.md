@@ -6,6 +6,8 @@ Custom sandbox maps for game-playground, as JSON documents. Read `../../CLAUDE.m
 
 **Why documents and not map scripts.** The built-in maps are `_build()` scripts. A map delivered in a pack of its own is mounted at another prefix than the game, and a script there that `extends` the game's map base by path names a path that is only right in one of the two places it runs (the family's mount constraint). Boxes are data: either pack can be anywhere.
 
+**Props.** A document may list `props` (catalogue ids, frozen unless `loose`) and `wires` between them, which game-playground puts down on the server when the map loads (its CLAUDE.md, *A map document can carry props*). `prop()` takes the floor a prop stands on and adds half its height from `HALF_HEIGHT`; keep that table in step with game-playground's catalogue.
+
 **`tools/build_maps.py` writes every document, and the JSON is committed.** Edit the builder, run it, commit both; `--check` fails when a committed file differs. Ramps are placed by their top surface's two ends and dropped along their normal by half their thickness, so the surface meets the ground exactly at both ends (dropped vertically, the top end is a lip, and over a step's height a lip is a wall).
 
 ## The maps
@@ -15,7 +17,9 @@ Custom sandbox maps for game-playground, as JSON documents. Read `../../CLAUDE.m
 
 - **`pgc_slopes` — Slide Hill.** A 180 m walled plate. A 14-degree hill 80 m long up to a 30 x 20 m deck 20 m up, with a pen on it (a 1 m wall round 8 m, under the 1.035 m a jump climbs, so nobody is shut in) to stand in and be picked up and thrown from, after the same video's "stand in the box" loop; and a 24-degree slope down the far side. **Measured, not assumed**: at the catalogue's friction (1.0) a plank or crate settles on the slope and stays (0.6-0.9 m, the drop onto it), so it can be built on; with friction 0.2, set by the tool gun's Edit properties or Physical properties, it slides about 35 m to the bottom in six seconds, and game-playground's prop surfing carries whoever stands on it. A 45-degree slope would slide everything at the default friction and nobody could walk it. On the east side a halfpipe: two 31-degree faces 14 m apart, each topped by a 5 m ledge 6 m up. `ramp_x` is `ramp_z`'s twin for ramps rising along X.
 
-All three are surveyed by `game-playground`'s `headless_playground` (*the hand-built maps, surveyed*: no slot, nothing unreached but what the document declares, no trap) and load through the catalogue on a dedicated server (`dedicated`'s map commands: `map pgc_quarry`). `game-playground/tools/screenshot.sh pgc_plots` / `pgc_quarry` renders them.
+- **`pgc_town` — Town.** A 200 m walled town on grass. Two crossing roads 14 m wide (the north-south one a hair higher, so the crossing is one surface), five buildings on 0.15 m pavements. Each building has a doorway with a **door prop wired to a button outside and one inside** (F on the door works too), loose crates and a barrel inside, and a ramp up the side wall away from the road to a post level with the roof. The post touches the wall: the first version left 0.2 m between them, a slot. A fountain plaza has trees round it, a stage, three market stalls with goods, benches and beach balls. Street trees and lamps run down the north-south road, and a car park in the south-east corner holds two buggies. The first map to use the document's `props` and `wires`.
+
+All of them are surveyed by `game-playground`'s `headless_playground` (*the hand-built maps, surveyed*: no slot, nothing unreached but what the document declares, no trap) and load through the catalogue on a dedicated server (`dedicated`'s map commands: `map pgc_quarry`). `game-playground/tools/screenshot.sh pgc_plots` / `pgc_quarry` renders them.
 
 ## Delivering it (not done yet)
 
