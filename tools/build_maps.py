@@ -675,11 +675,102 @@ def site():
                (0, 1, 60), 180.0, boxes, declared, props=props, wires=wires)
 
 
+# --- Warehouse ---------------------------------------------------------------------------
+
+def warehouse():
+    size, wall_h = 160.0, 4.0
+    boxes = [box((0, -0.5, 0), (size, 1, size), "#5a5d63")]
+    boxes += walls(size, wall_h, colour="#6d7480")
+    declared = wall_tops(size, wall_h, "the yard fence, 4 m up")
+    props, wires = [], []
+
+    # The hall: 80 x 50 m, its floor at dock height (1.2 m, a climb a jump does not make), walls
+    # 12 m and a roof. South wall: two 8 m loading doorways 6 m high; the east one has a ramp
+    # up from the yard, the west one is a sheer dock edge to drive off.
+    hx, hz, hw, hd, hh, dock = 0.0, -20.0, 80.0, 50.0, 12.0, 1.2
+    wall_c, wt = "#9c7134", 0.6
+    boxes.append(box((hx, dock / 2.0, hz), (hw, dock, hd), "#7d8189"))
+    south = hz + hd / 2.0
+    top = dock + hh
+    for side in (-1, 1):
+        boxes.append(box((hx + side * (hw / 2 - wt / 2), dock + hh / 2, hz), (wt, hh, hd), wall_c))
+    boxes.append(box((hx, dock + hh / 2, hz - hd / 2 + wt / 2), (hw, hh, wt), wall_c))
+    # South wall in five pieces round the two doorways (centred at x -20 and +20, 8 m wide).
+    door_xs, door_w, door_h = (-20.0, 20.0), 8.0, 6.0
+    edges = [-hw / 2, door_xs[0] - door_w / 2, door_xs[0] + door_w / 2, door_xs[1] - door_w / 2, door_xs[1] + door_w / 2, hw / 2]
+    for k in (0, 2, 4):
+        a, b = edges[k], edges[k + 1]
+        boxes.append(box(((a + b) / 2, dock + hh / 2, south - wt / 2), (b - a, hh, wt), wall_c))
+    for dx in door_xs:
+        boxes.append(box((dx, dock + door_h + (hh - door_h) / 2, south - wt / 2), (door_w, hh - door_h, wt), wall_c))
+    boxes.append(box((hx, top + 0.2, hz), (hw, 0.4, hd), "#6f7480"))
+    declared.append({"min": [-hw / 2, top, hz - hd / 2], "max": [hw / 2, top + 1.0, hz + hd / 2], "why": "the warehouse roof"})
+    # The ramp up at the east doorway; the west one is the dock edge.
+    boxes.append(ramp_z(door_xs[1], south + 6.0, 0.0, south, dock, door_w))
+
+    # Racking: four rows of 30 m, 2 m deep, shelves at 2.5 and 5 m above the floor on posts
+    # every 5 m, aisles of 6 m. The shelves are declared: nobody walks up a rack.
+    rack_c, shelf_c = "#3b6ea5", "#c2a23a"
+    for row, rz in enumerate((-36.0, -28.0, -20.0, -12.0)):
+        for px_ in range(7):
+            x = -25.0 + px_ * 5.0
+            for dz in (-0.85, 0.85):
+                boxes.append(box((x, dock + 2.75, rz + dz), (0.3, 5.5, 0.3), rack_c))
+        for level in (2.5, 5.0):
+            boxes.append(box((-10.0, dock + level, rz), (30.3, 0.2, 2.0), shelf_c))
+            # Crates on the shelves, loose: a shelf is flat, and knocking them off is the point.
+            for k in range(5):
+                props.append(prop("crate", -22.0 + k * 6.0 + (row % 2) * 2.0, dock + level + 0.1, rz, loose=True))
+        declared.append({"min": [-25.2, dock + 2.4, rz - 1.0], "max": [5.2, dock + 6.0, rz + 1.0], "why": "the rack shelves"})
+
+    # A catwalk round the north and east walls, 6 m up and 2.5 m wide, reached by a ramp up the
+    # west end of the north wall. Barrels along it to roll off.
+    cw_y = dock + 6.0
+    north = hz - hd / 2 + wt
+    # From where the ramp tops out to the east wall: overlapping the ramp's end instead left
+    # 1.4 m of headroom where the two met, and nobody got on.
+    cw_start, cw_end = -hw / 2 + wt + 14.0, hw / 2 - wt
+    boxes.append(box(((cw_start + cw_end) / 2, cw_y - 0.15, north + 1.25), (cw_end - cw_start, 0.3, 2.5), "#5a5d63"))
+    boxes.append(box((hx + hw / 2 - wt - 1.25, cw_y - 0.15, hz - 5.0), (2.5, 0.3, hd - 10.0 - wt), "#5a5d63"))
+    boxes.append(ramp_x(north + 1.25, -hw / 2 + wt, dock, -hw / 2 + wt + 14.0, cw_y, 2.5))
+    for k in range(4):
+        props.append(prop("barrel", 0.0 + k * 6.0, cw_y, north + 1.25, loose=True))
+
+    # The office in the south-west corner of the hall, a door on a button.
+    office, door_at, door_yaw, inward = building(-30.0, south - 8.0, 12.0, 8.0, 3.5, "e", "#e8e2d0")
+    for b in office:
+        b["at"][1] = r(b["at"][1] + dock)
+    boxes += office
+    n = len(props)
+    props.append(prop("door", door_at[0], dock, door_at[1], yaw=door_yaw))
+    props.append(prop("button", door_at[0] - inward[0] * 0.33, dock, door_at[1] + 1.9, yaw=door_yaw, lift=1.0))
+    props.append(prop("button", door_at[0] + inward[0] * 0.33, dock, door_at[1] - 1.9, yaw=door_yaw, lift=1.0))
+    wires.append(wire(n + 1, "pressed", n, "toggle"))
+    wires.append(wire(n + 2, "pressed", n, "toggle"))
+    declared.append({"min": [-36.0, dock + 3.5, south - 12.0], "max": [-24.0, dock + 4.5, south - 4.0], "why": "the office roof"})
+
+    # The yard: shipping containers, two high in places (declared tops), pallets of planks, a
+    # buggy to drive in up the ramp and off the dock.
+    cont = ["#a55b3b", "#3f9a96", "#5f9e4f", "#c2a23a"]
+    for k, (cx_, cz_, stack) in enumerate(((-50.0, 30.0, 2), (-50.0, 45.0, 1), (-30.0, 50.0, 2), (40.0, 45.0, 1), (55.0, 30.0, 2))):
+        for level in range(stack):
+            boxes.append(box((cx_, 1.3 + level * 2.6, cz_), (12.0, 2.6, 2.4), cont[(k + level) % 4]))
+        declared.append({"min": [cx_ - 6.0, 2.5, cz_ - 1.2], "max": [cx_ + 6.0, 2.6 * stack + 1.0, cz_ + 1.2], "why": "a container's top"})
+    for k in range(4):
+        props.append(prop("plank", 10.0, k * 0.15, 30.0, yaw=90.0, loose=True))
+        props.append(prop("plank", 10.7, k * 0.15, 30.0, yaw=90.0, loose=True))
+    props.append(prop("buggy", 20.0, 0.0, 22.0, loose=True))
+    props.append(prop("buggy", 0.0, 0.0, 40.0, loose=True))
+    return doc("pgc_warehouse", "Warehouse",
+               "A warehouse at dock height with racking full of crates, a catwalk with barrels, an office, and a yard of containers to drive round.",
+               (0, 1, 60), 0.0, boxes, declared, props=props, wires=wires)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry(), slopes(), town(), islands(), site()):
+    for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:
