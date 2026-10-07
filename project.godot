@@ -1,0 +1,12 @@
+; game-playground-maps is data, not a game: custom sandbox maps game-playground reads.
+; It is a Godot project only so dot-ci's release can import it and attach the -pack.zip
+; the site publishes — the pack game-playground's game.yml would name under
+; `dependencies` (not server_dependencies: a client builds the map too).
+
+config_version=5
+
+[application]
+
+config/name="game-playground-maps"
+config/description="Custom sandbox maps for game-playground, as JSON documents."
+config/features=PackedStringArray("4.7")

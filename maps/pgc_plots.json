@@ -1,0 +1,390 @@
+{
+ "format": 1,
+ "kind": "playground_map",
+ "id": "pgc_plots",
+ "name": "Build Plots",
+ "blurb": "Eight plots round a spawn plaza, a claim pad in front of each, and a deck to look down on them from.",
+ "map_kind": "sandbox",
+ "tier": 1,
+ "author": "TMC",
+ "spawn": [
+  0,
+  1,
+  0
+ ],
+ "spawn_yaw": 0.0,
+ "boxes": [
+  {
+   "at": [
+    0,
+    -0.5,
+    0
+   ],
+   "size": [
+    160.0,
+    1,
+    160.0
+   ],
+   "colour": "floor"
+  },
+  {
+   "at": [
+    -79.5,
+    3.0,
+    0
+   ],
+   "size": [
+    1,
+    6.0,
+    160.0
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    0,
+    3.0,
+    -79.5
+   ],
+   "size": [
+    160.0,
+    6.0,
+    1
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    79.5,
+    3.0,
+    0
+   ],
+   "size": [
+    1,
+    6.0,
+    160.0
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    0,
+    3.0,
+    79.5
+   ],
+   "size": [
+    160.0,
+    6.0,
+    1
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    0,
+    0.1,
+    0
+   ],
+   "size": [
+    20,
+    0.2,
+    20
+   ],
+   "colour": "start"
+  },
+  {
+   "at": [
+    -40.0,
+    0.1,
+    -40.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#3b6ea5"
+  },
+  {
+   "at": [
+    -25.5,
+    0.05,
+    -40.0
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    -40.0,
+    0.1,
+    0.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#a55b3b"
+  },
+  {
+   "at": [
+    -25.5,
+    0.05,
+    0.0
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    -40.0,
+    0.1,
+    40.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#5f9e4f"
+  },
+  {
+   "at": [
+    -25.5,
+    0.05,
+    40.0
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    0.0,
+    0.1,
+    -40.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#8d5fa8"
+  },
+  {
+   "at": [
+    0.0,
+    0.05,
+    -25.5
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    0.0,
+    0.1,
+    40.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#c2a23a"
+  },
+  {
+   "at": [
+    0.0,
+    0.05,
+    25.5
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    40.0,
+    0.1,
+    -40.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#3f9a96"
+  },
+  {
+   "at": [
+    25.5,
+    0.05,
+    -40.0
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    40.0,
+    0.1,
+    0.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#b04f72"
+  },
+  {
+   "at": [
+    25.5,
+    0.05,
+    0.0
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    40.0,
+    0.1,
+    40.0
+   ],
+   "size": [
+    26,
+    0.2,
+    26
+   ],
+   "colour": "#6d7480"
+  },
+  {
+   "at": [
+    25.5,
+    0.05,
+    40.0
+   ],
+   "size": [
+    2,
+    0.1,
+    2
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    -66,
+    3.75,
+    -66
+   ],
+   "size": [
+    10,
+    0.5,
+    10
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    -66.0,
+    1.7651,
+    -55.5854
+   ],
+   "size": [
+    6,
+    0.5,
+    11.7047
+   ],
+   "colour": "ramp",
+   "turn": [
+    1,
+    0,
+    0,
+    19.9831
+   ]
+  }
+ ],
+ "declared": [
+  {
+   "min": [
+    -80.0,
+    6.0,
+    -80.0
+   ],
+   "max": [
+    80.0,
+    6.5,
+    -79.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    -80.0,
+    6.0,
+    79.0
+   ],
+   "max": [
+    80.0,
+    6.5,
+    80.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    -80.0,
+    6.0,
+    -80.0
+   ],
+   "max": [
+    -79.0,
+    6.5,
+    80.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    79.0,
+    6.0,
+    -80.0
+   ],
+   "max": [
+    80.0,
+    6.5,
+    80.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  }
+ ]
+}
