@@ -234,9 +234,31 @@ def plots():
     boxes.append(box((-66, 3.75, -66), (10, 0.5, 10), "platform"))
     boxes.append(ramp_z(-66, -50.0, 0.0, -61.0, 4.0, 6))
     declared = wall_tops(size, wall_h, "the tops of the walls, 6 m up: they keep props in")
+    # A tree where the paths cross, and lamps on the plaza's corners.
+    for tx in (-20, 20):
+        for tz in (-20, 20):
+            b, dcl = tree(tx, tz)
+            boxes += b
+            declared += dcl
+    for lx in (-11, 11):
+        for lz in (-11, 11):
+            b, dcl = lamp(lx, lz, 0.2)
+            boxes += b
+            declared += dcl
+    # A supply depot on the plaza's east side, loose, to start building with before anybody
+    # opens the menu; and a buggy parked by the deck for getting round the plots.
+    props = []
+    for k in range(6):
+        props.append(prop("plank", 7.0, 0.2 + k * 0.15, -4.0, yaw=90.0, loose=True))
+    for k in range(3):
+        props.append(prop("panel", 7.0, 0.2 + k * 0.1, 3.5, loose=True))
+    for k in range(4):
+        props.append(prop("crate", 8.5, 0.2 + (k // 2), -0.6 + (k % 2) * 1.05, loose=True))
+    props.append(prop("barrel", 5.5, 0.2, 0.0, loose=True))
+    props.append(prop("buggy", -66.0, 0.0, -25.0, loose=True))
     return doc("pgc_plots", "Build Plots",
-               "Eight plots round a spawn plaza, a claim pad in front of each, and a deck to look down on them from.",
-               (0, 1, 0), 0.0, boxes, declared)
+               "Eight plots round a spawn plaza, a claim pad in front of each, a depot of planks and crates to start with, and a deck to look down on them from.",
+               (0, 1, 0), 0.0, boxes, declared, props=props)
 
 
 # --- Quarry --------------------------------------------------------------------------------
@@ -281,9 +303,32 @@ def quarry():
         declared.append({"min": [at[0] - 1.5, floor_y + 2.5, at[1] - 1.5],
                          "max": [at[0] + 1.5, floor_y + 3.0, at[1] + 1.5],
                          "why": "a boulder's top, 2.5 m up: a climb nobody makes"})
+    props, wires = [], []
+    # A blasting hut on the west terrace: a lever outside opens its door, and inside are the
+    # barrels (with pg_destruction on, a shot one goes up and takes its neighbours with it).
+    hut, door_at, door_yaw, inward = building(-40.0, 0.0, 10.0, 8.0, 4.0, "e", "#7b5a3a")
+    for b in hut:
+        b["at"][1] = r(b["at"][1] + b_y)
+    boxes += hut
+    n = len(props)
+    props.append(prop("door", door_at[0], b_y, door_at[1], yaw=door_yaw))
+    props.append(prop("lever", door_at[0] + 0.6, b_y, door_at[1] + 2.0))
+    wires.append(wire(n + 1, "switched", n, "toggle"))
+    for k in range(6):
+        props.append(prop("barrel", -42.5 + (k % 3) * 1.15, b_y, -1.5 + (k // 3) * 1.15, loose=True))
+    # Barrels in two clusters on the pit floor, ore crates by the cart, boulders on the north
+    # rim one push from the edge, and a buggy by the spawn.
+    for cx_, cz_ in ((6, -20), (-22, 6)):
+        for k in range(4):
+            props.append(prop("barrel", cx_ + (k % 2) * 1.1, floor_y, cz_ + (k // 2) * 1.1, loose=True))
+    for k in range(5):
+        props.append(prop("crate", -12.0 + (k % 3) * 1.05, floor_y + (k // 3), 3.0, loose=True, tint="#6b6f4e"))
+    for bx in (-12.0, 4.0, 18.0):
+        props.append(prop("boulder", bx, 0.0, 52.0, loose=True))
+    props.append(prop("buggy", 12.0, 0.0, 60.0, loose=True))
     return doc("pgc_quarry", "Quarry",
-               "A pit in two terraces with ramps between them, rails and a cart: a place to throw rocks into.",
-               (0, 1, 60), 0.0, boxes, declared)
+               "A pit in two terraces with ramps between them, rails and a cart, boulders on the rim, barrels to blow up, and a blasting hut with a lever on its door.",
+               (0, 1, 60), 0.0, boxes, declared, props=props, wires=wires)
 
 
 # --- Slide Hill ----------------------------------------------------------------------------
@@ -316,9 +361,22 @@ def slopes():
     boxes.append(box((35.5, lip / 2.0, 0), (5, lip, 60), "platform"))
     boxes.append(box((74.5, lip / 2.0, 0), (5, lip, 60), "platform"))
     declared = wall_tops(size, wall_h, "the tops of the walls, 6 m up: they keep props in")
+    props = []
+    # Sleds at the head of the far slope: planks with their friction at 0.05, on the flat deck
+    # so they wait to be pushed over the edge. Stand on one first.
+    for sx_ in (-10.0, -6.0, 6.0, 10.0):
+        props.append(prop("plank", sx_, top, -27.5, loose=True, tint="#e0a052", physics={"gravity": True, "weight": 1.0, "friction": 0.05, "bounce": 0.0}))
+    # Crates on the hill (friction 1.0 holds them on 14 degrees), balls in the halfpipe, and a
+    # buggy at the foot of the hill.
+    for at in ((-8, 40), (6, 25), (-4, 10)):
+        y = top * (70.0 - at[1]) / 80.0
+        props.append(prop("crate", at[0], y + 0.1, at[1], loose=True))
+    for z in (-15.0, 0.0, 15.0):
+        props.append(prop("beach_ball", 55.0, 0.0, z, loose=True))
+    props.append(prop("buggy", 25.0, 0.0, 75.0, loose=True))
     return doc("pgc_slopes", "Slide Hill",
-               "A hill to a deck 20 m up with a pen on top to be thrown from, a far slope that props slide down once their friction is turned down, and a halfpipe.",
-               (0, 1, 80), 0.0, boxes, declared)
+               "A hill to a deck 20 m up with a pen on top to be thrown from, sleds waiting at the head of a far slope, and a halfpipe.",
+               (0, 1, 80), 0.0, boxes, declared, props=props)
 
 
 def tree(x, z, floor_y=0.0, height=3.0, canopy=3.2):
@@ -459,11 +517,77 @@ def town():
                (0, 1, 80), 0.0, boxes, declared, props=props, wires=wires)
 
 
+# --- Sky Islands ---------------------------------------------------------------------------
+
+ISLAND_COLOURS = ["#5f9e4f", "#4f8f7a", "#6f8f3f", "#8f8a4f", "#4f7a8f", "#8d5fa8"]
+
+
+def _edge(c, d, half):
+    """Where the line from an island's centre c along unit direction d leaves its square."""
+    t = half / max(abs(d[0]), abs(d[1]))
+    return (c[0] + d[0] * t, c[1] + d[1] * t)
+
+
+def islands():
+    size, wall_h = 240.0, 6.0
+    boxes = [box((0, -0.5, 0), (size, 1, size), "#4f6b45")]
+    boxes += walls(size, wall_h, colour="#6d7480")
+    declared = wall_tops(size, wall_h, "the outer walls, 6 m up")
+    props = []
+
+    ring, half, thick = 55.0, 10.0, 3.0
+    centres, tops = [], []
+    for i in range(6):
+        a = math.radians(i * 60.0)
+        centres.append((ring * math.cos(a), ring * math.sin(a)))
+        tops.append(8.0 + i * 5.0)
+    for i, (c, top) in enumerate(zip(centres, tops)):
+        boxes.append(box((c[0], top - thick / 2.0, c[1]), (2 * half, thick, 2 * half), ISLAND_COLOURS[i]))
+
+    def link(i, j, width, colour):
+        ci, cj = centres[i], centres[j]
+        dx, dz = cj[0] - ci[0], cj[1] - ci[1]
+        n = math.hypot(dx, dz)
+        d = (dx / n, dz / n)
+        a = _edge(ci, d, half)
+        b = _edge(cj, (-d[0], -d[1]), half)
+        return bridge((a[0], tops[i], a[1]), (b[0], tops[j], b[1]), width, colour)
+
+    # Bridges up the ring, 5 m a step: a gentle walk, 4 m wide and no rails.
+    for i in range(5):
+        boxes.append(link(i, i + 1, 4.0, "ramp"))
+    # And the slide: from the top island straight back down to the first, 25 m in 32, about
+    # 38 degrees. Walkable, just; a prop with its friction turned down goes down it fast.
+    boxes.append(link(5, 0, 6.0, "#c25b4a"))
+    # From the ground up to the first island.
+    c0 = centres[0]
+    boxes.append(ramp_z(c0[0], c0[1] - half - 36.0, 0.0, c0[1] - half, tops[0], 5.0))
+
+    # Things on the islands.
+    c5, c2, c3 = centres[5], centres[2], centres[3]
+    for k in range(3):
+        props.append(prop("plank", c5[0] - 6 + k * 2.5, tops[5], c5[1] - 3, yaw=60.0, loose=True,
+                          physics={"gravity": True, "weight": 1.0, "friction": 0.05, "bounce": 0.0}, tint="#e0a052"))
+    # Two boulders at the head of the slide, one push from going down it.
+    props.append(prop("boulder", c5[0] + 2.5, tops[5], c5[1] + 6.5, loose=True))
+    props.append(prop("boulder", c5[0] + 7.0, tops[5], c5[1] + 3.0, loose=True))
+    for k in range(4):
+        props.append(prop("barrel", c2[0] - 3 + (k % 2) * 1.2, tops[2], c2[1] + (k // 2) * 1.2, loose=True))
+    for k in range(3):
+        for level in range(3 - k):
+            props.append(prop("crate", c3[0] - 2 + k * 1.05 + level * 0.5, tops[3] + level * 1.0, c3[1], loose=True))
+    for at in ((-20, 10), (15, -25), (-10, -40), (30, 30)):
+        props.append(prop("beach_ball", at[0], 0.0, at[1], loose=True))
+    return doc("pgc_islands", "Sky Islands",
+               "Six islands climbing a ring on bridges, a slide from the top one back to the first, and nothing between you and the ground.",
+               (c0[0], 1, c0[1] - half - 40.0), 180.0, boxes, declared, props=props)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry(), slopes(), town()):
+    for d in (plots(), quarry(), slopes(), town(), islands()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:

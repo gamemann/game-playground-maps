@@ -3,7 +3,7 @@
  "kind": "playground_map",
  "id": "pgc_slopes",
  "name": "Slide Hill",
- "blurb": "A hill to a deck 20 m up with a pen on top to be thrown from, a far slope that props slide down once their friction is turned down, and a halfpipe.",
+ "blurb": "A hill to a deck 20 m up with a pen on top to be thrown from, sleds waiting at the head of a far slope, and a halfpipe.",
  "map_kind": "sandbox",
  "tier": 1,
  "author": "TMC",
@@ -312,6 +312,135 @@
     90.0
    ],
    "why": "the tops of the walls, 6 m up: they keep props in"
+  }
+ ],
+ "props": [
+  {
+   "id": "plank",
+   "at": [
+    -10.0,
+    20.075,
+    -27.5
+   ],
+   "frozen": false,
+   "tint": "#e0a052",
+   "physics": {
+    "gravity": true,
+    "weight": 1.0,
+    "friction": 0.05,
+    "bounce": 0.0
+   }
+  },
+  {
+   "id": "plank",
+   "at": [
+    -6.0,
+    20.075,
+    -27.5
+   ],
+   "frozen": false,
+   "tint": "#e0a052",
+   "physics": {
+    "gravity": true,
+    "weight": 1.0,
+    "friction": 0.05,
+    "bounce": 0.0
+   }
+  },
+  {
+   "id": "plank",
+   "at": [
+    6.0,
+    20.075,
+    -27.5
+   ],
+   "frozen": false,
+   "tint": "#e0a052",
+   "physics": {
+    "gravity": true,
+    "weight": 1.0,
+    "friction": 0.05,
+    "bounce": 0.0
+   }
+  },
+  {
+   "id": "plank",
+   "at": [
+    10.0,
+    20.075,
+    -27.5
+   ],
+   "frozen": false,
+   "tint": "#e0a052",
+   "physics": {
+    "gravity": true,
+    "weight": 1.0,
+    "friction": 0.05,
+    "bounce": 0.0
+   }
+  },
+  {
+   "id": "crate",
+   "at": [
+    -8,
+    8.1,
+    40
+   ],
+   "frozen": false
+  },
+  {
+   "id": "crate",
+   "at": [
+    6,
+    11.85,
+    25
+   ],
+   "frozen": false
+  },
+  {
+   "id": "crate",
+   "at": [
+    -4,
+    15.6,
+    10
+   ],
+   "frozen": false
+  },
+  {
+   "id": "beach_ball",
+   "at": [
+    55.0,
+    1.2,
+    -15.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "beach_ball",
+   "at": [
+    55.0,
+    1.2,
+    0.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "beach_ball",
+   "at": [
+    55.0,
+    1.2,
+    15.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "buggy",
+   "at": [
+    25.0,
+    0.9,
+    75.0
+   ],
+   "frozen": false
   }
  ]
 }

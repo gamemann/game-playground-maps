@@ -3,7 +3,7 @@
  "kind": "playground_map",
  "id": "pgc_plots",
  "name": "Build Plots",
- "blurb": "Eight plots round a spawn plaza, a claim pad in front of each, and a deck to look down on them from.",
+ "blurb": "Eight plots round a spawn plaza, a claim pad in front of each, a depot of planks and crates to start with, and a deck to look down on them from.",
  "map_kind": "sandbox",
  "tier": 1,
  "author": "TMC",
@@ -331,6 +331,214 @@
     0,
     19.9831
    ]
+  },
+  {
+   "at": [
+    -20,
+    1.5,
+    -20
+   ],
+   "size": [
+    0.6,
+    3.0,
+    0.6
+   ],
+   "colour": "#6b4a2a"
+  },
+  {
+   "at": [
+    -20,
+    4.28,
+    -20
+   ],
+   "size": [
+    3.2,
+    2.56,
+    3.2
+   ],
+   "colour": "#3e7a3a"
+  },
+  {
+   "at": [
+    -20,
+    1.5,
+    20
+   ],
+   "size": [
+    0.6,
+    3.0,
+    0.6
+   ],
+   "colour": "#6b4a2a"
+  },
+  {
+   "at": [
+    -20,
+    4.28,
+    20
+   ],
+   "size": [
+    3.2,
+    2.56,
+    3.2
+   ],
+   "colour": "#3e7a3a"
+  },
+  {
+   "at": [
+    20,
+    1.5,
+    -20
+   ],
+   "size": [
+    0.6,
+    3.0,
+    0.6
+   ],
+   "colour": "#6b4a2a"
+  },
+  {
+   "at": [
+    20,
+    4.28,
+    -20
+   ],
+   "size": [
+    3.2,
+    2.56,
+    3.2
+   ],
+   "colour": "#3e7a3a"
+  },
+  {
+   "at": [
+    20,
+    1.5,
+    20
+   ],
+   "size": [
+    0.6,
+    3.0,
+    0.6
+   ],
+   "colour": "#6b4a2a"
+  },
+  {
+   "at": [
+    20,
+    4.28,
+    20
+   ],
+   "size": [
+    3.2,
+    2.56,
+    3.2
+   ],
+   "colour": "#3e7a3a"
+  },
+  {
+   "at": [
+    -11,
+    2.45,
+    -11
+   ],
+   "size": [
+    0.25,
+    4.5,
+    0.25
+   ],
+   "colour": "#3a3d42"
+  },
+  {
+   "at": [
+    -11,
+    4.8,
+    -11
+   ],
+   "size": [
+    0.5,
+    0.2,
+    0.5
+   ],
+   "colour": "#e8d9a0"
+  },
+  {
+   "at": [
+    -11,
+    2.45,
+    11
+   ],
+   "size": [
+    0.25,
+    4.5,
+    0.25
+   ],
+   "colour": "#3a3d42"
+  },
+  {
+   "at": [
+    -11,
+    4.8,
+    11
+   ],
+   "size": [
+    0.5,
+    0.2,
+    0.5
+   ],
+   "colour": "#e8d9a0"
+  },
+  {
+   "at": [
+    11,
+    2.45,
+    -11
+   ],
+   "size": [
+    0.25,
+    4.5,
+    0.25
+   ],
+   "colour": "#3a3d42"
+  },
+  {
+   "at": [
+    11,
+    4.8,
+    -11
+   ],
+   "size": [
+    0.5,
+    0.2,
+    0.5
+   ],
+   "colour": "#e8d9a0"
+  },
+  {
+   "at": [
+    11,
+    2.45,
+    11
+   ],
+   "size": [
+    0.25,
+    4.5,
+    0.25
+   ],
+   "colour": "#3a3d42"
+  },
+  {
+   "at": [
+    11,
+    4.8,
+    11
+   ],
+   "size": [
+    0.5,
+    0.2,
+    0.5
+   ],
+   "colour": "#e8d9a0"
   }
  ],
  "declared": [
@@ -385,6 +593,253 @@
     80.0
    ],
    "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    -21.6,
+    5.36,
+    -21.6
+   ],
+   "max": [
+    -18.4,
+    6.06,
+    -18.4
+   ],
+   "why": "a tree's leaves"
+  },
+  {
+   "min": [
+    -21.6,
+    5.36,
+    18.4
+   ],
+   "max": [
+    -18.4,
+    6.06,
+    21.6
+   ],
+   "why": "a tree's leaves"
+  },
+  {
+   "min": [
+    18.4,
+    5.36,
+    -21.6
+   ],
+   "max": [
+    21.6,
+    6.06,
+    -18.4
+   ],
+   "why": "a tree's leaves"
+  },
+  {
+   "min": [
+    18.4,
+    5.36,
+    18.4
+   ],
+   "max": [
+    21.6,
+    6.06,
+    21.6
+   ],
+   "why": "a tree's leaves"
+  },
+  {
+   "min": [
+    -11.25,
+    4.7,
+    -11.25
+   ],
+   "max": [
+    -10.75,
+    5.4,
+    -10.75
+   ],
+   "why": "a lamp's head"
+  },
+  {
+   "min": [
+    -11.25,
+    4.7,
+    10.75
+   ],
+   "max": [
+    -10.75,
+    5.4,
+    11.25
+   ],
+   "why": "a lamp's head"
+  },
+  {
+   "min": [
+    10.75,
+    4.7,
+    -11.25
+   ],
+   "max": [
+    11.25,
+    5.4,
+    -10.75
+   ],
+   "why": "a lamp's head"
+  },
+  {
+   "min": [
+    10.75,
+    4.7,
+    10.75
+   ],
+   "max": [
+    11.25,
+    5.4,
+    11.25
+   ],
+   "why": "a lamp's head"
+  }
+ ],
+ "props": [
+  {
+   "id": "plank",
+   "at": [
+    7.0,
+    0.275,
+    -4.0
+   ],
+   "yaw": 90.0,
+   "frozen": false
+  },
+  {
+   "id": "plank",
+   "at": [
+    7.0,
+    0.425,
+    -4.0
+   ],
+   "yaw": 90.0,
+   "frozen": false
+  },
+  {
+   "id": "plank",
+   "at": [
+    7.0,
+    0.575,
+    -4.0
+   ],
+   "yaw": 90.0,
+   "frozen": false
+  },
+  {
+   "id": "plank",
+   "at": [
+    7.0,
+    0.725,
+    -4.0
+   ],
+   "yaw": 90.0,
+   "frozen": false
+  },
+  {
+   "id": "plank",
+   "at": [
+    7.0,
+    0.875,
+    -4.0
+   ],
+   "yaw": 90.0,
+   "frozen": false
+  },
+  {
+   "id": "plank",
+   "at": [
+    7.0,
+    1.025,
+    -4.0
+   ],
+   "yaw": 90.0,
+   "frozen": false
+  },
+  {
+   "id": "panel",
+   "at": [
+    7.0,
+    0.25,
+    3.5
+   ],
+   "frozen": false
+  },
+  {
+   "id": "panel",
+   "at": [
+    7.0,
+    0.35,
+    3.5
+   ],
+   "frozen": false
+  },
+  {
+   "id": "panel",
+   "at": [
+    7.0,
+    0.45,
+    3.5
+   ],
+   "frozen": false
+  },
+  {
+   "id": "crate",
+   "at": [
+    8.5,
+    0.7,
+    -0.6
+   ],
+   "frozen": false
+  },
+  {
+   "id": "crate",
+   "at": [
+    8.5,
+    0.7,
+    0.45
+   ],
+   "frozen": false
+  },
+  {
+   "id": "crate",
+   "at": [
+    8.5,
+    1.7,
+    -0.6
+   ],
+   "frozen": false
+  },
+  {
+   "id": "crate",
+   "at": [
+    8.5,
+    1.7,
+    0.45
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    5.5,
+    0.9,
+    0.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "buggy",
+   "at": [
+    -66.0,
+    0.9,
+    -25.0
+   ],
+   "frozen": false
   }
  ]
 }

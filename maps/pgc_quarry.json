@@ -3,7 +3,7 @@
  "kind": "playground_map",
  "id": "pgc_quarry",
  "name": "Quarry",
- "blurb": "A pit in two terraces with ramps between them, rails and a cart: a place to throw rocks into.",
+ "blurb": "A pit in two terraces with ramps between them, rails and a cart, boulders on the rim, barrels to blow up, and a blasting hut with a lever on its door.",
  "map_kind": "sandbox",
  "tier": 1,
  "author": "TMC",
@@ -388,6 +388,97 @@
     3
    ],
    "colour": "#5c5c5c"
+  },
+  {
+   "at": [
+    -40.0,
+    -4.0,
+    -3.8
+   ],
+   "size": [
+    10.0,
+    4.0,
+    0.4
+   ],
+   "colour": "#7b5a3a"
+  },
+  {
+   "at": [
+    -40.0,
+    -4.0,
+    3.8
+   ],
+   "size": [
+    10.0,
+    4.0,
+    0.4
+   ],
+   "colour": "#7b5a3a"
+  },
+  {
+   "at": [
+    -44.8,
+    -4.0,
+    0.0
+   ],
+   "size": [
+    0.4,
+    4.0,
+    8.0
+   ],
+   "colour": "#7b5a3a"
+  },
+  {
+   "at": [
+    -35.2,
+    -4.0,
+    -2.6
+   ],
+   "size": [
+    0.4,
+    4.0,
+    2.8
+   ],
+   "colour": "#7b5a3a"
+  },
+  {
+   "at": [
+    -35.2,
+    -4.0,
+    2.6
+   ],
+   "size": [
+    0.4,
+    4.0,
+    2.8
+   ],
+   "colour": "#7b5a3a"
+  },
+  {
+   "at": [
+    -35.2,
+    -2.6,
+    0.0
+   ],
+   "size": [
+    0.4,
+    1.2,
+    2.4
+   ],
+   "colour": "#7b5a3a"
+  },
+  {
+   "at": [
+    -40.0,
+    -1.85,
+    0.0
+   ],
+   "size": [
+    10.0,
+    0.3,
+    8.0
+   ],
+   "colour": "platform"
   }
  ],
  "declared": [
@@ -468,6 +559,245 @@
     -18.5
    ],
    "why": "a boulder's top, 2.5 m up: a climb nobody makes"
+  }
+ ],
+ "props": [
+  {
+   "id": "door",
+   "at": [
+    -35.2,
+    -4.7,
+    0.0
+   ],
+   "yaw": 90.0
+  },
+  {
+   "id": "lever",
+   "at": [
+    -34.6,
+    -5.55,
+    2.0
+   ]
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -42.5,
+    -5.3,
+    -1.5
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -41.35,
+    -5.3,
+    -1.5
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -40.2,
+    -5.3,
+    -1.5
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -42.5,
+    -5.3,
+    -0.35
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -41.35,
+    -5.3,
+    -0.35
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -40.2,
+    -5.3,
+    -0.35
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    6.0,
+    -11.3,
+    -20.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    7.1,
+    -11.3,
+    -20.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    6.0,
+    -11.3,
+    -18.9
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    7.1,
+    -11.3,
+    -18.9
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -22.0,
+    -11.3,
+    6.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -20.9,
+    -11.3,
+    6.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -22.0,
+    -11.3,
+    7.1
+   ],
+   "frozen": false
+  },
+  {
+   "id": "barrel",
+   "at": [
+    -20.9,
+    -11.3,
+    7.1
+   ],
+   "frozen": false
+  },
+  {
+   "id": "crate",
+   "at": [
+    -12.0,
+    -11.5,
+    3.0
+   ],
+   "frozen": false,
+   "tint": "#6b6f4e"
+  },
+  {
+   "id": "crate",
+   "at": [
+    -10.95,
+    -11.5,
+    3.0
+   ],
+   "frozen": false,
+   "tint": "#6b6f4e"
+  },
+  {
+   "id": "crate",
+   "at": [
+    -9.9,
+    -11.5,
+    3.0
+   ],
+   "frozen": false,
+   "tint": "#6b6f4e"
+  },
+  {
+   "id": "crate",
+   "at": [
+    -12.0,
+    -10.5,
+    3.0
+   ],
+   "frozen": false,
+   "tint": "#6b6f4e"
+  },
+  {
+   "id": "crate",
+   "at": [
+    -10.95,
+    -10.5,
+    3.0
+   ],
+   "frozen": false,
+   "tint": "#6b6f4e"
+  },
+  {
+   "id": "boulder",
+   "at": [
+    -12.0,
+    1.5,
+    52.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "boulder",
+   "at": [
+    4.0,
+    1.5,
+    52.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "boulder",
+   "at": [
+    18.0,
+    1.5,
+    52.0
+   ],
+   "frozen": false
+  },
+  {
+   "id": "buggy",
+   "at": [
+    12.0,
+    0.9,
+    60.0
+   ],
+   "frozen": false
+  }
+ ],
+ "wires": [
+  {
+   "from": 1,
+   "out": "switched",
+   "to": 0,
+   "in": "toggle"
   }
  ]
 }
