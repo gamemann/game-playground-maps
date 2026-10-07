@@ -766,11 +766,61 @@ def warehouse():
                (0, 1, 60), 0.0, boxes, declared, props=props, wires=wires)
 
 
+# --- Canyon ----------------------------------------------------------------------------------
+
+def canyon():
+    size, rim, half_gap = 220.0, 20.0, 20.0
+    wall_h = rim + 4.0
+    rock, mesa = "#9c6b45", "#b8875a"
+    boxes = [box((0, -0.5, 0), (size, 1, size), "#7a6548")]
+    boxes += walls(size, wall_h, colour=rock)
+    declared = wall_tops(size, wall_h, "the outer walls, 24 m up: 4 m over the mesas")
+    props = []
+
+    # Two mesas, the canyon 40 m wide between them, a dry riverbed down its middle.
+    mesa_w = size / 2.0 - half_gap
+    for side in (-1, 1):
+        boxes.append(box((side * (half_gap + mesa_w / 2.0), rim / 2.0, 0), (mesa_w, rim, size), mesa))
+    boxes.append(box((0, 0.01, 0), (10, 0.02, size - 2), "#4a5a66"))
+    # A ramp down each canyon wall, flush against it, 60 m long (18 degrees): the west one from
+    # the floor at z 80 up to the rim at z 20, the east one from z -80 up to z -20.
+    boxes.append(ramp_z(-half_gap + 3.0, 80.0, 0.0, 20.0, rim, 6.0, rock))
+    boxes.append(ramp_z(half_gap - 3.0, -80.0, 0.0, -20.0, rim, 6.0, rock))
+
+    # The crossings. A road bridge at z 0; a 1.2 m balance beam at z -60; and at z 60 a broken
+    # bridge, its west half rising 3 m to a lip 12 m short of the east half: a jump for a buggy.
+    boxes.append(box((0, rim - 0.4, 0), (2 * half_gap, 0.8, 8.0), "#7d8189"))
+    for side in (-1, 1):
+        boxes.append(box((0, rim + 0.5, side * 3.8), (2 * half_gap, 1.0, 0.4), "#5a5d63"))
+    boxes.append(box((0, rim - 0.3, -60.0), (2 * half_gap, 0.6, 1.2), "#7b5a3a"))
+    boxes.append(bridge((-half_gap, rim, 60.0), (-6.0, rim + 3.0, 60.0), 6.0, "#7d8189"))
+    boxes.append(box((13.0, rim - 0.4, 60.0), (14.0, 0.8, 6.0), "#7d8189"))
+
+    # Rocks on the mesas, a metre high (a jump climbs them), and the props: boulders on the
+    # rim one push from the edge, barrels on the broken bridge's stubs, buggies on both sides,
+    # and balls in the riverbed.
+    for at in ((-40, 30), (-55, -45), (-80, 10), (45, -30), (70, 50), (35, 80)):
+        boxes.append(box((at[0], rim + 0.5, at[1]), (4.0, 1.0, 3.0), rock))
+    for z in (-30.0, -10.0, 30.0):
+        props.append(prop("boulder", -half_gap - 2.5, rim, z, loose=True))
+        props.append(prop("boulder", half_gap + 2.5, rim, z + 15.0, loose=True))
+    for k in range(3):
+        props.append(prop("barrel", 10.0 + k * 1.2, rim, 60.0, loose=True))
+    for z in (52.0, 68.0):
+        props.append(prop("buggy", -45.0, rim, z, yaw=-90.0, loose=True))
+    props.append(prop("buggy", 45.0, rim, -10.0, yaw=90.0, loose=True))
+    for z in (-40.0, 10.0, 45.0):
+        props.append(prop("beach_ball", 0.0, 0.0, z, loose=True))
+    return doc("pgc_canyon", "Canyon",
+               "Two mesas either side of a 40 m canyon: a road bridge, a balance beam, a broken bridge to jump in a buggy, ramps down the walls, and boulders to push in.",
+               (-60.0, rim + 1.0, 0.0), -90.0, boxes, declared, props=props)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse()):
+    for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse(), canyon()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:
