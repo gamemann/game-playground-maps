@@ -583,11 +583,103 @@ def islands():
                (c0[0], 1, c0[1] - half - 40.0), 180.0, boxes, declared, props=props)
 
 
+# --- Construction Site ---------------------------------------------------------------------
+
+CONCRETE = "#8a8a84"
+DIRT = "#7a6548"
+
+
+def site():
+    size, wall_h = 180.0, 3.0
+    boxes = [box((0, -0.5, 0), (size, 1, size), DIRT)]
+    boxes += walls(size, wall_h, colour="#c2a23a")
+    declared = wall_tops(size, wall_h, "the site fence, 3 m up")
+    props, wires = [], []
+
+    # The frame: a 30 x 20 m footprint, floors every 4.5 m, three of them open slabs on
+    # 0.6 m columns, the top one open to the sky. Climbed by a switchback on the east side:
+    # lane A (next to the frame) carries the first and third ramps, lane B the second, and a
+    # landing at each floor spans both lanes and touches the slab's edge.
+    fx, fz, fw, fd, storey = -25.0, -20.0, 30.0, 20.0, 4.5
+    boxes.append(box((fx, 0.15, fz), (fw, 0.3, fd), CONCRETE))
+    floors = [storey * k for k in (1, 2, 3)]
+    for y in floors:
+        boxes.append(box((fx, y - 0.15, fz), (fw, 0.3, fd), CONCRETE))
+    for cx_ in (fx - fw / 2 + 0.3, fx, fx + fw / 2 - 0.3):
+        for cz_ in (fz - fd / 2 + 0.3, fz + fd / 2 - 0.3):
+            boxes.append(box((cx_, floors[-1] / 2.0, cz_), (0.6, floors[-1] - 0.3, 0.6), CONCRETE))
+    east = fx + fw / 2.0
+    lane_a, lane_b, lane_w = east + 1.8, east + 5.4, 3.6
+    z0 = fz - fd / 2.0  # flush with the frame: 1 m in left a 0.4 m slot against the corner column
+    run = storey * 1.8
+    # Ramp 1 (lane A, rising +Z) to floor 1; landing 1; ramp 2 (lane B, rising -Z) to floor 2;
+    # landing 2; ramp 3 (lane A, rising +Z, 9 m over ramp 1) to floor 3; landing 3.
+    boxes.append(ramp_z(lane_a, z0, 0.0, z0 + run, floors[0], lane_w))
+    boxes.append(box((east + 3.6, floors[0] - 0.15, z0 + run + 1.5), (7.2, 0.3, 3.0), CONCRETE))
+    boxes.append(ramp_z(lane_b, z0 + run, floors[0], z0, floors[1], lane_w))
+    boxes.append(box((east + 3.6, floors[1] - 0.15, z0 - 1.5), (7.2, 0.3, 3.0), CONCRETE))
+    boxes.append(ramp_z(lane_a, z0, floors[1], z0 + run, floors[2], lane_w))
+    boxes.append(box((east + 3.6, floors[2] - 0.15, z0 + run + 1.5), (7.2, 0.3, 3.0), CONCRETE))
+
+    # The tower crane: a 2 m mast 28 m tall, and a jib along X over the frame.
+    crane_x, crane_z, mast = 15.0, -38.0, 28.0
+    boxes.append(box((crane_x, mast / 2.0, crane_z), (2, mast, 2), "#d4a017"))
+    boxes.append(box((crane_x - 12.0, mast + 0.5, crane_z), (40, 1.0, 1.2), "#d4a017"))
+    boxes.append(box((crane_x + 6.0, mast - 1.0, crane_z), (4, 2.0, 2.5), "#5a5d63"))
+    declared.append({"min": [crane_x - 32.0, mast - 0.2, crane_z - 1.3], "max": [crane_x + 8.0, mast + 1.5, crane_z + 1.3],
+                     "why": "the crane's jib and mast top, 28 m up"})
+
+    # A dirt kicker for the buggies: up 2.5 m at 15 degrees, a 6 m table, and down again.
+    kx, kz, mound = 40.0, 35.0, "#5e4a33"
+    boxes.append(ramp_z(kx, kz - 18.0, 0.0, kz - 9.0, 2.5, 8.0, mound))
+    boxes.append(box((kx, 1.25, kz - 6.0), (8.0, 2.5, 6.0), mound))
+    boxes.append(ramp_z(kx, kz + 6.0, 0.0, kz - 3.0, 2.5, 8.0, mound))
+    # A bumps track beside it: three mounds 1.2 m high, up and down at about 13 degrees.
+    for k in range(3):
+        bz = -10.0 + k * 14.0
+        boxes.append(ramp_z(62.0, bz - 5.0, 0.0, bz, 1.2, 6.0, mound))
+        boxes.append(ramp_z(62.0, bz + 5.0, 0.0, bz, 1.2, 6.0, mound))
+    props.append(prop("buggy", kx - 10.0, 0.0, kz - 30.0, loose=True))
+    props.append(prop("buggy", kx + 10.0, 0.0, kz - 30.0, loose=True))
+
+    # The site office, a door on a button either side.
+    office, door_at, door_yaw, inward = building(-50.0, 45.0, 12.0, 8.0, 3.5, "s", "#e8e2d0")
+    boxes += office
+    n = len(props)
+    props.append(prop("door", door_at[0], 0.0, door_at[1], yaw=door_yaw))
+    props.append(prop("button", door_at[0] + 1.9, 0.0, door_at[1] - inward[1] * 0.33, lift=1.0))
+    props.append(prop("button", door_at[0] - 1.9, 0.0, door_at[1] + inward[1] * 0.33, lift=1.0))
+    wires.append(wire(n + 1, "pressed", n, "toggle"))
+    wires.append(wire(n + 2, "pressed", n, "toggle"))
+    declared.append({"min": [-56.0, 3.5, 41.0], "max": [-44.0, 4.5, 49.0], "why": "the office roof, 3.65 m up"})
+    for k in range(6):
+        props.append(prop("can", -56.0 + k * 2.4, 0.0, 38.0, tint="#e0702a", loose=True))
+
+    # Material piles, loose: everything a frame needs, stacked where a truck would drop it.
+    for k in range(8):
+        props.append(prop("plank", 5.0, k * 0.15, 10.0, loose=True))
+    for k in range(4):
+        props.append(prop("beam", 5.0, k * 0.4, 16.0, loose=True))
+    for k in range(4):
+        props.append(prop("panel", 14.0, k * 0.1, 12.0, loose=True))
+    for k in range(2):
+        props.append(prop("slab", 14.0, k * 0.6, 22.0, loose=True))
+    for k in range(3):
+        props.append(prop("pillar", 22.0 + k * 1.5, 0.0, 10.0))
+    # And things already up on the frame, to throw off it.
+    for k in range(3):
+        props.append(prop("crate", fx - 8.0 + k * 1.1, floors[1], fz, loose=True))
+    props.append(prop("barrel", fx + 6.0, floors[2], fz + 4.0, loose=True))
+    return doc("pgc_site", "Construction Site",
+               "A half-built three-storey frame climbed by switchback ramps, a tower crane, piles of planks and beams, a site office and a kicker for the buggies.",
+               (0, 1, 60), 180.0, boxes, declared, props=props, wires=wires)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry(), slopes(), town(), islands()):
+    for d in (plots(), quarry(), slopes(), town(), islands(), site()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:
