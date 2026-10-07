@@ -1,0 +1,317 @@
+{
+ "format": 1,
+ "kind": "playground_map",
+ "id": "pgc_slopes",
+ "name": "Slide Hill",
+ "blurb": "A hill to a deck 20 m up with a pen on top to be thrown from, a far slope that props slide down once their friction is turned down, and a halfpipe.",
+ "map_kind": "sandbox",
+ "tier": 1,
+ "author": "TMC",
+ "spawn": [
+  0,
+  1,
+  80
+ ],
+ "spawn_yaw": 0.0,
+ "boxes": [
+  {
+   "at": [
+    0,
+    -0.5,
+    0
+   ],
+   "size": [
+    180.0,
+    1,
+    180.0
+   ],
+   "colour": "floor"
+  },
+  {
+   "at": [
+    -89.5,
+    3.0,
+    0
+   ],
+   "size": [
+    1,
+    6.0,
+    180.0
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    0,
+    3.0,
+    -89.5
+   ],
+   "size": [
+    180.0,
+    6.0,
+    1
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    89.5,
+    3.0,
+    0
+   ],
+   "size": [
+    1,
+    6.0,
+    180.0
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    0,
+    3.0,
+    89.5
+   ],
+   "size": [
+    180.0,
+    6.0,
+    1
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    0,
+    0.1,
+    80
+   ],
+   "size": [
+    12,
+    0.2,
+    12
+   ],
+   "colour": "start"
+  },
+  {
+   "at": [
+    0.0,
+    9.7575,
+    29.9394
+   ],
+   "size": [
+    30,
+    0.5,
+    82.4621
+   ],
+   "colour": "ramp",
+   "turn": [
+    1,
+    0,
+    0,
+    14.0362
+   ]
+  },
+  {
+   "at": [
+    0,
+    19.75,
+    -20
+   ],
+   "size": [
+    30,
+    0.5,
+    20
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    0.0,
+    9.7715,
+    -52.3985
+   ],
+   "size": [
+    30,
+    0.5,
+    49.2443
+   ],
+   "colour": "#5f9e4f",
+   "turn": [
+    1,
+    0,
+    0,
+    -23.9625
+   ]
+  },
+  {
+   "at": [
+    -4.15,
+    20.5,
+    -20
+   ],
+   "size": [
+    0.3,
+    1.0,
+    8.6
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    0,
+    20.5,
+    -24.15
+   ],
+   "size": [
+    8.0,
+    1.0,
+    0.3
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    4.15,
+    20.5,
+    -20
+   ],
+   "size": [
+    0.3,
+    1.0,
+    8.6
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    0,
+    20.5,
+    -15.85
+   ],
+   "size": [
+    8.0,
+    1.0,
+    0.3
+   ],
+   "colour": "boost"
+  },
+  {
+   "at": [
+    42.8714,
+    2.7856,
+    0.0
+   ],
+   "size": [
+    11.6619,
+    0.5,
+    60
+   ],
+   "colour": "ramp",
+   "turn": [
+    0,
+    0,
+    1,
+    -30.9638
+   ]
+  },
+  {
+   "at": [
+    67.1286,
+    2.7856,
+    0.0
+   ],
+   "size": [
+    11.6619,
+    0.5,
+    60
+   ],
+   "colour": "ramp",
+   "turn": [
+    0,
+    0,
+    1,
+    30.9638
+   ]
+  },
+  {
+   "at": [
+    35.5,
+    3.0,
+    0
+   ],
+   "size": [
+    5,
+    6.0,
+    60
+   ],
+   "colour": "platform"
+  },
+  {
+   "at": [
+    74.5,
+    3.0,
+    0
+   ],
+   "size": [
+    5,
+    6.0,
+    60
+   ],
+   "colour": "platform"
+  }
+ ],
+ "declared": [
+  {
+   "min": [
+    -90.0,
+    6.0,
+    -90.0
+   ],
+   "max": [
+    90.0,
+    6.5,
+    -89.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    -90.0,
+    6.0,
+    89.0
+   ],
+   "max": [
+    90.0,
+    6.5,
+    90.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    -90.0,
+    6.0,
+    -90.0
+   ],
+   "max": [
+    -89.0,
+    6.5,
+    90.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    89.0,
+    6.0,
+    -90.0
+   ],
+   "max": [
+    90.0,
+    6.5,
+    90.0
+   ],
+   "why": "the tops of the walls, 6 m up: they keep props in"
+  }
+ ]
+}

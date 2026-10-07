@@ -47,6 +47,20 @@ def ramp_z(x, z_low, y_low, z_high, y_high, width, colour="ramp", thickness=0.5)
     return box(centre, (width, thickness, length), colour, (1, 0, 0, math.degrees(theta)))
 
 
+def ramp_x(z, x_low, y_low, x_high, y_high, length, colour="ramp", thickness=0.5):
+    """A walkable ramp along X: its top surface runs from (x_low, y_low) to (x_high, y_high)."""
+    run = x_high - x_low
+    rise = y_high - y_low
+    span = math.hypot(run, rise)
+    a = math.atan2(rise, abs(run))
+    # Rising toward +X is a turn of +a about Z; toward -X, -a.
+    theta = a if run > 0 else -a
+    normal = (-math.sin(theta), math.cos(theta), 0.0)
+    mid = ((x_low + x_high) / 2.0, (y_low + y_high) / 2.0, z)
+    centre = tuple(mid[i] - normal[i] * thickness / 2.0 for i in range(3))
+    return box(centre, (span, thickness, length), colour, (0, 0, 1, math.degrees(theta)))
+
+
 def walls(size, height, top_y=0.0, colour="platform"):
     half = size / 2.0
     out = []
@@ -156,11 +170,46 @@ def quarry():
                (0, 1, 60), 0.0, boxes, declared)
 
 
+# --- Slide Hill ----------------------------------------------------------------------------
+
+def slopes():
+    size, wall_h = 180.0, 6.0
+    boxes = [box((0, -0.5, 0), (size, 1, size))]
+    boxes += walls(size, wall_h)
+    boxes.append(box((0, 0.1, 80), (12, 0.2, 12), "start"))
+    # The hill: a long 14-degree walk up from the spawn side to a deck 20 m up, and a
+    # 24-degree slope down the far side. Measured (2026-10-07): at the catalogue's friction
+    # (1.0) a plank or crate set on the slope settles and stays, so it can be built on; with
+    # its friction at 0.2 (the tool gun's Edit properties or Physical properties) it slides
+    # about 35 m to the bottom, and prop surfing carries whoever stands on it.
+    top = 20.0
+    boxes.append(ramp_z(0, 70.0, 0.0, -10.0, top, 30))
+    boxes.append(box((0, top - 0.25, -20), (30, 0.5, 20), "platform"))
+    boxes.append(ramp_z(0, -75.0, 0.0, -30.0, top, 30, "#5f9e4f"))
+    # The pen on the deck: a 1 m wall round an 8 m square, the "stand in the box" spot to be
+    # picked up and thrown from. 1.0 m is under the 1.035 m a jump climbs, so nobody is shut in.
+    pen = "boost"
+    for side in (-1, 1):
+        boxes.append(box((side * 4.15, top + 0.5, -20), (0.3, 1.0, 8.6), pen))
+        boxes.append(box((0, top + 0.5, -20 + side * 4.15), (8.0, 1.0, 0.3), pen))
+    # A halfpipe along Z on the east side: two 31-degree faces 14 m apart, each topped by a
+    # 5 m ledge, for riding a prop back and forth or dropping in on one.
+    lip = 6.0
+    boxes.append(ramp_x(0, 48.0, 0.0, 38.0, lip, 60))
+    boxes.append(ramp_x(0, 62.0, 0.0, 72.0, lip, 60))
+    boxes.append(box((35.5, lip / 2.0, 0), (5, lip, 60), "platform"))
+    boxes.append(box((74.5, lip / 2.0, 0), (5, lip, 60), "platform"))
+    declared = wall_tops(size, wall_h, "the tops of the walls, 6 m up: they keep props in")
+    return doc("pgc_slopes", "Slide Hill",
+               "A hill to a deck 20 m up with a pen on top to be thrown from, a far slope that props slide down once their friction is turned down, and a halfpipe.",
+               (0, 1, 80), 0.0, boxes, declared)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry()):
+    for d in (plots(), quarry(), slopes()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:
