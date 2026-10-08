@@ -3,7 +3,7 @@
  "kind": "playground_map",
  "id": "pgc_nature",
  "name": "Nature",
- "blurb": "A meadow with a snow field and an ice rink, a mud pit, a sand beach and a pond, a lava pit with a rock bridge, trampolines, a rock outcrop and a glass greenhouse.",
+ "blurb": "A meadow with a snow field and an ice rink, a mud pit, a sand beach and a pond, a lava pit with a rock bridge, a frozen lake with a diving board, a slime swamp, bushes, trampolines, a rock outcrop and a glass greenhouse.",
  "map_kind": "sandbox",
  "tier": 1,
  "author": "TMC",
@@ -631,6 +631,408 @@
   },
   {
    "at": [
+    -2.5,
+    1.0,
+    -80.0
+   ],
+   "size": [
+    1.0,
+    2.0,
+    18.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    10.0,
+    1.0,
+    -88.5
+   ],
+   "size": [
+    24.0,
+    2.0,
+    1.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    22.5,
+    1.0,
+    -80.0
+   ],
+   "size": [
+    1.0,
+    2.0,
+    18.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    10.0,
+    1.0,
+    -71.5
+   ],
+   "size": [
+    24.0,
+    2.0,
+    1.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    10.0,
+    0.975,
+    -80.0
+   ],
+   "size": [
+    24.0,
+    1.75,
+    16.0
+   ],
+   "material": "water"
+  },
+  {
+   "at": [
+    10.0,
+    1.9,
+    -80.0
+   ],
+   "size": [
+    24.0,
+    0.1,
+    16.0
+   ],
+   "material": "thin_ice"
+  },
+  {
+   "at": [
+    10.0,
+    0.7549,
+    -66.049
+   ],
+   "size": [
+    4.0,
+    0.5,
+    10.198
+   ],
+   "colour": "#8a7a62",
+   "turn": [
+    1,
+    0,
+    0,
+    11.3099
+   ]
+  },
+  {
+   "at": [
+    24.5,
+    2.5,
+    -80.0
+   ],
+   "size": [
+    3.0,
+    5.0,
+    3.0
+   ],
+   "material": "wood"
+  },
+  {
+   "at": [
+    24.5,
+    2.2667,
+    -72.0897
+   ],
+   "size": [
+    3.0,
+    0.5,
+    13.9284
+   ],
+   "colour": "#7b5a3a",
+   "turn": [
+    1,
+    0,
+    0,
+    21.0375
+   ]
+  },
+  {
+   "at": [
+    21.0,
+    4.9,
+    -80.0
+   ],
+   "size": [
+    4.0,
+    0.2,
+    1.0
+   ],
+   "material": "wood"
+  },
+  {
+   "at": [
+    -103.5,
+    0.4,
+    10.0
+   ],
+   "size": [
+    1.0,
+    0.8,
+    26.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -95.0,
+    0.4,
+    -2.5
+   ],
+   "size": [
+    16.0,
+    0.8,
+    1.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -86.5,
+    0.4,
+    10.0
+   ],
+   "size": [
+    1.0,
+    0.8,
+    26.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -95.0,
+    0.4,
+    22.5
+   ],
+   "size": [
+    16.0,
+    0.8,
+    1.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -95.0,
+    0.05,
+    10.0
+   ],
+   "size": [
+    16.0,
+    0.1,
+    24.0
+   ],
+   "material": "mud"
+  },
+  {
+   "at": [
+    -95.0,
+    0.4,
+    10.0
+   ],
+   "size": [
+    16.0,
+    0.6,
+    24.0
+   ],
+   "material": "slime"
+  },
+  {
+   "at": [
+    -92.0,
+    0.45,
+    0.0
+   ],
+   "size": [
+    2.0,
+    0.9,
+    2.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -98.0,
+    0.45,
+    4.0
+   ],
+   "size": [
+    2.0,
+    0.9,
+    2.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -92.0,
+    0.45,
+    8.0
+   ],
+   "size": [
+    2.0,
+    0.9,
+    2.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -98.0,
+    0.45,
+    12.0
+   ],
+   "size": [
+    2.0,
+    0.9,
+    2.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -92.0,
+    0.45,
+    16.0
+   ],
+   "size": [
+    2.0,
+    0.9,
+    2.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -98.0,
+    0.45,
+    20.0
+   ],
+   "size": [
+    2.0,
+    0.9,
+    2.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -32,
+    1.0,
+    30
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    32,
+    1.0,
+    26
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    -36,
+    1.0,
+    -12
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    40,
+    1.0,
+    -18
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    16,
+    1.0,
+    62
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    -22,
+    1.0,
+    62
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    -5,
+    1.0,
+    15
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    28,
+    1.0,
+    75
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
     -20,
     1.5,
     0
@@ -761,9 +1163,9 @@
   },
   {
    "at": [
-    -95,
+    -75,
     1.5,
-    10
+    42
    ],
    "size": [
     0.6,
@@ -774,9 +1176,9 @@
   },
   {
    "at": [
-    -95,
+    -75,
     4.28,
-    10
+    42
    ],
    "size": [
     3.2,
@@ -789,7 +1191,7 @@
    "at": [
     30,
     1.5,
-    -80
+    -100
    ],
    "size": [
     0.6,
@@ -802,7 +1204,7 @@
    "at": [
     30,
     4.28,
-    -80
+    -100
    ],
    "size": [
     3.2,
@@ -906,6 +1308,19 @@
   },
   {
    "min": [
+    -2.0,
+    0.0,
+    -88.0
+   ],
+   "max": [
+    22.0,
+    1.85,
+    -72.0
+   ],
+   "why": "the lake's bed, under the ice until somebody breaks it"
+  },
+  {
+   "min": [
     -21.6,
     5.36,
     -1.6
@@ -971,14 +1386,14 @@
   },
   {
    "min": [
-    -96.6,
+    -76.6,
     5.36,
-    8.4
+    40.4
    ],
    "max": [
-    -93.4,
+    -73.4,
     6.06,
-    11.6
+    43.6
    ],
    "why": "a tree's leaves"
   },
@@ -986,12 +1401,12 @@
    "min": [
     28.4,
     5.36,
-    -81.6
+    -101.6
    ],
    "max": [
     31.6,
     6.06,
-    -78.4
+    -98.4
    ],
    "why": "a tree's leaves"
   },

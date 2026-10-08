@@ -1232,14 +1232,45 @@ def nature():
     for k in range(4):
         props.append(prop("crate", gx - 5 + k * 3, 0.0, gz, loose=True, tint="#5f9e4f"))
 
+    # A frozen lake in the north: deep water under a sheet of thin ice, in a 2 m stone basin, and
+    # a diving board on a wooden tower over it. The ice holds a walker; a drop off the board is
+    # 3 m, fast enough to go through (game-playground breaks thin ice like glass, from impacts).
+    fx, fz, fw, fd, frim = 10.0, -80.0, 24.0, 16.0, 2.0
+    for side in (-1, 1):
+        boxes.append(mat("rock", (fx + side * (fw / 2 + 0.5), frim / 2, fz), (1.0, frim, fd + 2.0)))
+        boxes.append(mat("rock", (fx, frim / 2, fz + side * (fd / 2 + 0.5)), (fw, frim, 1.0)))
+    boxes.append(mat("water", (fx, (0.1 + frim - 0.15) / 2, fz), (fw, frim - 0.25, fd)))
+    boxes.append(mat("thin_ice", (fx, frim - 0.1, fz), (fw, 0.1, fd)))
+    boxes.append(ramp_z(fx, fz + fd / 2 + 1.0 + 10.0, 0.0, fz + fd / 2 + 1.0, frim, 4.0, "#8a7a62"))
+    tx = fx + fw / 2 + 1.0 + 1.5
+    boxes.append(mat("wood", (tx, 2.5, fz), (3.0, 5.0, 3.0)))
+    boxes.append(ramp_z(tx, fz + 1.5 + 13.0, 0.0, fz + 1.5, 5.0, 3.0, "#7b5a3a"))
+    boxes.append(mat("wood", (tx - 3.5, 4.9, fz), (4.0, 0.2, 1.0)))
+    declared.append({"min": [fx - fw / 2, 0.0, fz - fd / 2], "max": [fx + fw / 2, frim - 0.15, fz + fd / 2],
+                     "why": "the lake's bed, under the ice until somebody breaks it"})
+
+    # A slime swamp on the west edge: a shallow toxic pool in a low rim, stepping stones across.
+    wx, wz, ww, wd, wrim = -95.0, 10.0, 16.0, 24.0, 0.8
+    for side in (-1, 1):
+        boxes.append(mat("rock", (wx + side * (ww / 2 + 0.5), wrim / 2, wz), (1.0, wrim, wd + 2.0)))
+        boxes.append(mat("rock", (wx, wrim / 2, wz + side * (wd / 2 + 0.5)), (ww, wrim, 1.0)))
+    boxes.append(mat("mud", (wx, 0.05, wz), (ww, 0.1, wd)))
+    boxes.append(mat("slime", (wx, 0.4, wz), (ww, 0.6, wd)))
+    for k in range(6):
+        boxes.append(mat("rock", (wx + (-3.0 if k % 2 else 3.0), 0.45, wz - 10.0 + k * 4.0), (2.0, 0.9, 2.0)))
+
+    # Bushes to hide in round the meadow: foliage, walked through.
+    for at in ((-32, 30), (32, 26), (-36, -12), (40, -18), (16, 62), (-22, 62), (-5, 15), (28, 75)):
+        boxes.append(mat("foliage", (at[0], 1.0, at[1]), (3.0, 2.0, 3.0)))
+
     # Trees round the meadow.
-    for at in ((-20, 0), (20, 0), (-25, 70), (25, 70), (90, -20), (-95, 10), (30, -80), (-30, -85)):
+    for at in ((-20, 0), (20, 0), (-25, 70), (25, 70), (90, -20), (-75, 42), (30, -100), (-30, -85)):
         b, dcl = tree(at[0], at[1])
         boxes += b
         declared += dcl
     props.append(prop("buggy", 20, 0.0, 40, loose=True))
     return doc("pgc_nature", "Nature",
-               "A meadow with a snow field and an ice rink, a mud pit, a sand beach and a pond, a lava pit with a rock bridge, trampolines, a rock outcrop and a glass greenhouse.",
+               "A meadow with a snow field and an ice rink, a mud pit, a sand beach and a pond, a lava pit with a rock bridge, a frozen lake with a diving board, a slime swamp, bushes, trampolines, a rock outcrop and a glass greenhouse.",
                (0, 1, 80), 0.0, boxes, declared, props=props, wires=wires)
 
 
