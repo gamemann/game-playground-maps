@@ -16,16 +16,55 @@
  "boxes": [
   {
    "at": [
-    0,
-    -0.5,
-    0
+    0.0,
+    -1.75,
+    -35.0
    ],
    "size": [
     180.0,
-    1,
-    180.0
+    3.5,
+    110.0
    ],
-   "colour": "floor"
+   "material": "grass"
+  },
+  {
+   "at": [
+    -75.0,
+    -1.75,
+    28.0
+   ],
+   "size": [
+    30.0,
+    3.5,
+    16.0
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    25.0,
+    -1.75,
+    28.0
+   ],
+   "size": [
+    130.0,
+    3.5,
+    16.0
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    0.0,
+    -1.75,
+    63.0
+   ],
+   "size": [
+    180.0,
+    3.5,
+    54.0
+   ],
+   "material": "grass"
   },
   {
    "at": [
@@ -38,7 +77,8 @@
     6.0,
     180.0
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
   },
   {
    "at": [
@@ -51,7 +91,8 @@
     6.0,
     1
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
   },
   {
    "at": [
@@ -64,7 +105,8 @@
     6.0,
     180.0
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
   },
   {
    "at": [
@@ -77,7 +119,8 @@
     6.0,
     1
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
   },
   {
    "at": [
@@ -90,7 +133,8 @@
     0.2,
     12
    ],
-   "colour": "start"
+   "colour": "start",
+   "material": "concrete"
   },
   {
    "at": [
@@ -103,13 +147,14 @@
     0.5,
     82.4621
    ],
-   "colour": "ramp",
+   "colour": "#7fae55",
    "turn": [
     1,
     0,
     0,
     14.0362
-   ]
+   ],
+   "material": "grass"
   },
   {
    "at": [
@@ -122,7 +167,8 @@
     0.5,
     20
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "wood"
   },
   {
    "at": [
@@ -135,13 +181,26 @@
     0.5,
     49.2443
    ],
-   "colour": "#5f9e4f",
    "turn": [
     1,
     0,
     0,
     -23.9625
-   ]
+   ],
+   "material": "snow"
+  },
+  {
+   "at": [
+    0,
+    0.05,
+    -82.0
+   ],
+   "size": [
+    30,
+    0.1,
+    14.0
+   ],
+   "material": "ice"
   },
   {
    "at": [
@@ -154,7 +213,8 @@
     1.0,
     8.6
    ],
-   "colour": "boost"
+   "colour": "boost",
+   "material": "wood"
   },
   {
    "at": [
@@ -167,7 +227,8 @@
     1.0,
     0.3
    ],
-   "colour": "boost"
+   "colour": "boost",
+   "material": "wood"
   },
   {
    "at": [
@@ -180,7 +241,8 @@
     1.0,
     8.6
    ],
-   "colour": "boost"
+   "colour": "boost",
+   "material": "wood"
   },
   {
    "at": [
@@ -193,7 +255,8 @@
     1.0,
     0.3
    ],
-   "colour": "boost"
+   "colour": "boost",
+   "material": "wood"
   },
   {
    "at": [
@@ -206,13 +269,13 @@
     0.5,
     60
    ],
-   "colour": "ramp",
    "turn": [
     0,
     0,
     1,
     -30.9638
-   ]
+   ],
+   "material": "wood"
   },
   {
    "at": [
@@ -225,13 +288,13 @@
     0.5,
     60
    ],
-   "colour": "ramp",
    "turn": [
     0,
     0,
     1,
     30.9638
-   ]
+   ],
+   "material": "wood"
   },
   {
    "at": [
@@ -244,7 +307,8 @@
     6.0,
     60
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
   },
   {
    "at": [
@@ -257,7 +321,203 @@
     6.0,
     60
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -50.0,
+    -3.0,
+    28.0
+   ],
+   "size": [
+    20.0,
+    1.0,
+    16.0
+   ],
+   "material": "sand"
+  },
+  {
+   "at": [
+    -40.5,
+    -1.4286,
+    28.0
+   ],
+   "size": [
+    1.0,
+    2.1429,
+    16.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -41.5,
+    -1.6071,
+    28.0
+   ],
+   "size": [
+    1.0,
+    1.7857,
+    16.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -42.5,
+    -1.7857,
+    28.0
+   ],
+   "size": [
+    1.0,
+    1.4286,
+    16.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -43.5,
+    -1.9643,
+    28.0
+   ],
+   "size": [
+    1.0,
+    1.0714,
+    16.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -44.5,
+    -2.1429,
+    28.0
+   ],
+   "size": [
+    1.0,
+    0.7143,
+    16.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -45.5,
+    -2.3214,
+    28.0
+   ],
+   "size": [
+    1.0,
+    0.3571,
+    16.0
+   ],
+   "material": "rock"
+  },
+  {
+   "at": [
+    -50.0,
+    -1.3,
+    28.0
+   ],
+   "size": [
+    20.0,
+    2.4,
+    16.0
+   ],
+   "material": "water"
+  },
+  {
+   "at": [
+    -50.0,
+    -0.05,
+    28.0
+   ],
+   "size": [
+    20.0,
+    0.1,
+    16.0
+   ],
+   "material": "thin_ice"
+  },
+  {
+   "at": [
+    -50.0,
+    0.05,
+    19.0
+   ],
+   "size": [
+    24.0,
+    0.1,
+    2.0
+   ],
+   "material": "snow"
+  },
+  {
+   "at": [
+    -61.0,
+    0.05,
+    28.0
+   ],
+   "size": [
+    2.0,
+    0.1,
+    16.0
+   ],
+   "material": "snow"
+  },
+  {
+   "at": [
+    -50.0,
+    0.05,
+    37.0
+   ],
+   "size": [
+    24.0,
+    0.1,
+    2.0
+   ],
+   "material": "snow"
+  },
+  {
+   "at": [
+    -39.0,
+    0.05,
+    28.0
+   ],
+   "size": [
+    2.0,
+    0.1,
+    16.0
+   ],
+   "material": "snow"
+  },
+  {
+   "at": [
+    -30.0,
+    0.15,
+    60.0
+   ],
+   "size": [
+    3.0,
+    0.3,
+    3.0
+   ],
+   "material": "rubber"
+  },
+  {
+   "at": [
+    -24.0,
+    0.15,
+    66.0
+   ],
+   "size": [
+    3.0,
+    0.3,
+    3.0
+   ],
+   "material": "rubber"
   }
  ],
  "declared": [
@@ -312,6 +572,19 @@
     90.0
    ],
    "why": "the tops of the walls, 6 m up: they keep props in"
+  },
+  {
+   "min": [
+    -60.0,
+    -2.5,
+    20.0
+   ],
+   "max": [
+    -40.0,
+    -0.1,
+    36.0
+   ],
+   "why": "the pond's bed and steps, under the ice until somebody breaks it"
   }
  ],
  "props": [

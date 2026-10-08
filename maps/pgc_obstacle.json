@@ -16,16 +16,55 @@
  "boxes": [
   {
    "at": [
-    0,
-    -0.5,
-    0
+    0.0,
+    -1.5,
+    -40.0
    ],
    "size": [
     160.0,
-    1,
-    160.0
+    3.0,
+    80.0
    ],
-   "colour": "#4f6b45"
+   "material": "grass"
+  },
+  {
+   "at": [
+    -41.25,
+    -1.5,
+    6.75
+   ],
+   "size": [
+    77.5,
+    3.0,
+    13.5
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    42.75,
+    -1.5,
+    6.75
+   ],
+   "size": [
+    74.5,
+    3.0,
+    13.5
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    0.0,
+    -1.5,
+    46.75
+   ],
+   "size": [
+    160.0,
+    3.0,
+    66.5
+   ],
+   "material": "grass"
   },
   {
    "at": [
@@ -38,7 +77,8 @@
     6.0,
     160.0
    ],
-   "colour": "#6d7480"
+   "colour": "#6d7480",
+   "material": "concrete"
   },
   {
    "at": [
@@ -51,7 +91,8 @@
     6.0,
     1
    ],
-   "colour": "#6d7480"
+   "colour": "#6d7480",
+   "material": "concrete"
   },
   {
    "at": [
@@ -64,7 +105,8 @@
     6.0,
     160.0
    ],
-   "colour": "#6d7480"
+   "colour": "#6d7480",
+   "material": "concrete"
   },
   {
    "at": [
@@ -77,7 +119,8 @@
     6.0,
     1
    ],
-   "colour": "#6d7480"
+   "colour": "#6d7480",
+   "material": "concrete"
   },
   {
    "at": [
@@ -90,7 +133,8 @@
     0.2,
     10
    ],
-   "colour": "start"
+   "colour": "start",
+   "material": "concrete"
   },
   {
    "at": [
@@ -103,7 +147,8 @@
     1.0,
     3
    ],
-   "colour": "#3b6ea5"
+   "colour": "#3b6ea5",
+   "material": "concrete"
   },
   {
    "at": [
@@ -116,7 +161,8 @@
     2.0,
     3
    ],
-   "colour": "#3f9a96"
+   "colour": "#3f9a96",
+   "material": "concrete"
   },
   {
    "at": [
@@ -129,7 +175,8 @@
     3.0,
     3
    ],
-   "colour": "#5f9e4f"
+   "colour": "#5f9e4f",
+   "material": "concrete"
   },
   {
    "at": [
@@ -142,7 +189,8 @@
     4.0,
     3
    ],
-   "colour": "#c2a23a"
+   "colour": "#c2a23a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -155,7 +203,8 @@
     4,
     2
    ],
-   "colour": "#3b6ea5"
+   "colour": "#3b6ea5",
+   "material": "concrete"
   },
   {
    "at": [
@@ -168,7 +217,8 @@
     4,
     2
    ],
-   "colour": "#3f9a96"
+   "colour": "#3f9a96",
+   "material": "concrete"
   },
   {
    "at": [
@@ -181,7 +231,8 @@
     4,
     2
    ],
-   "colour": "#5f9e4f"
+   "colour": "#5f9e4f",
+   "material": "concrete"
   },
   {
    "at": [
@@ -194,7 +245,8 @@
     4,
     2
    ],
-   "colour": "#c2a23a"
+   "colour": "#c2a23a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -207,7 +259,8 @@
     4,
     2
    ],
-   "colour": "#a55b3b"
+   "colour": "#a55b3b",
+   "material": "concrete"
   },
   {
    "at": [
@@ -220,7 +273,8 @@
     4,
     2
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -233,33 +287,36 @@
     0.4,
     12.0
    ],
-   "colour": "#c2a23a"
+   "colour": "#c2a23a",
+   "material": "wood"
   },
   {
    "at": [
     1.5,
-    1.8,
+    0.8,
     2.0
    ],
    "size": [
     0.4,
-    3.6,
+    5.6,
     0.4
    ],
-   "colour": "#3a3d42"
+   "colour": "#3a3d42",
+   "material": "metal"
   },
   {
    "at": [
     1.5,
-    1.8,
-    10.0
+    0.8,
+    8.0
    ],
    "size": [
     0.4,
-    3.6,
+    5.6,
     0.4
    ],
-   "colour": "#3a3d42"
+   "colour": "#3a3d42",
+   "material": "metal"
   },
   {
    "at": [
@@ -272,7 +329,86 @@
     4,
     6
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
+  },
+  {
+   "at": [
+    1.5,
+    -2.5,
+    6.75
+   ],
+   "size": [
+    8.0,
+    1.0,
+    13.5
+   ],
+   "material": "sand"
+  },
+  {
+   "at": [
+    1.5,
+    -1.2,
+    13.0
+   ],
+   "size": [
+    8.0,
+    1.6,
+    1.0
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    1.5,
+    -1.4,
+    12.0
+   ],
+   "size": [
+    8.0,
+    1.2,
+    1.0
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    1.5,
+    -1.6,
+    11.0
+   ],
+   "size": [
+    8.0,
+    0.8,
+    1.0
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    1.5,
+    -1.8,
+    10.0
+   ],
+   "size": [
+    8.0,
+    0.4,
+    1.0
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    1.5,
+    -1.15,
+    6.75
+   ],
+   "size": [
+    8.0,
+    1.7,
+    13.5
+   ],
+   "material": "water"
   },
   {
    "at": [
@@ -285,7 +421,8 @@
     4.8,
     3
    ],
-   "colour": "#3f9a96"
+   "colour": "#3f9a96",
+   "material": "concrete"
   },
   {
    "at": [
@@ -298,7 +435,8 @@
     5.6,
     3
    ],
-   "colour": "#5f9e4f"
+   "colour": "#5f9e4f",
+   "material": "concrete"
   },
   {
    "at": [
@@ -311,7 +449,8 @@
     6.4,
     3
    ],
-   "colour": "#c2a23a"
+   "colour": "#c2a23a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -324,7 +463,8 @@
     7.2,
     3
    ],
-   "colour": "#a55b3b"
+   "colour": "#a55b3b",
+   "material": "concrete"
   },
   {
    "at": [
@@ -337,7 +477,8 @@
     8.0,
     3
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -350,7 +491,8 @@
     8.0,
     10
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
   },
   {
    "at": [
@@ -363,7 +505,8 @@
     3.0,
     3.8
    ],
-   "colour": "#c25b4a"
+   "colour": "#c25b4a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -376,7 +519,8 @@
     3.0,
     3.8
    ],
-   "colour": "#c25b4a"
+   "colour": "#c25b4a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -389,7 +533,8 @@
     0.2,
     2.4
    ],
-   "colour": "#c25b4a"
+   "colour": "#c25b4a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -402,7 +547,8 @@
     4,
     8
    ],
-   "colour": "#e8e2d0"
+   "colour": "#e8e2d0",
+   "material": "concrete"
   },
   {
    "at": [
@@ -415,7 +561,8 @@
     4,
     8
    ],
-   "colour": "#9aa3ad"
+   "colour": "#9aa3ad",
+   "material": "concrete"
   },
   {
    "at": [
@@ -428,7 +575,8 @@
     4,
     8
    ],
-   "colour": "#e8e2d0"
+   "colour": "#e8e2d0",
+   "material": "concrete"
   },
   {
    "at": [
@@ -441,7 +589,8 @@
     4,
     8
    ],
-   "colour": "#9aa3ad"
+   "colour": "#9aa3ad",
+   "material": "concrete"
   },
   {
    "at": [
@@ -454,7 +603,8 @@
     4,
     8
    ],
-   "colour": "#e8e2d0"
+   "colour": "#e8e2d0",
+   "material": "concrete"
   },
   {
    "at": [
@@ -467,7 +617,8 @@
     0.5,
     3.5
    ],
-   "colour": "#3b6ea5"
+   "colour": "#3b6ea5",
+   "material": "concrete"
   },
   {
    "at": [
@@ -480,7 +631,8 @@
     0.5,
     3.5
    ],
-   "colour": "#3f9a96"
+   "colour": "#3f9a96",
+   "material": "concrete"
   },
   {
    "at": [
@@ -493,7 +645,8 @@
     0.5,
     3.5
    ],
-   "colour": "#5f9e4f"
+   "colour": "#5f9e4f",
+   "material": "concrete"
   },
   {
    "at": [
@@ -506,7 +659,8 @@
     0.5,
     3.5
    ],
-   "colour": "#c2a23a"
+   "colour": "#c2a23a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -519,7 +673,8 @@
     0.5,
     3.5
    ],
-   "colour": "#a55b3b"
+   "colour": "#a55b3b",
+   "material": "concrete"
   },
   {
    "at": [
@@ -532,7 +687,8 @@
     0.5,
     3.5
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -545,7 +701,8 @@
     0.5,
     3.5
    ],
-   "colour": "#3b6ea5"
+   "colour": "#3b6ea5",
+   "material": "concrete"
   },
   {
    "at": [
@@ -558,7 +715,8 @@
     0.5,
     3.5
    ],
-   "colour": "#3f9a96"
+   "colour": "#3f9a96",
+   "material": "concrete"
   },
   {
    "at": [
@@ -571,7 +729,8 @@
     0.5,
     3.5
    ],
-   "colour": "#5f9e4f"
+   "colour": "#5f9e4f",
+   "material": "concrete"
   },
   {
    "at": [
@@ -584,7 +743,8 @@
     0.5,
     3.5
    ],
-   "colour": "#c2a23a"
+   "colour": "#c2a23a",
+   "material": "concrete"
   },
   {
    "at": [
@@ -597,7 +757,8 @@
     0.5,
     3.5
    ],
-   "colour": "#a55b3b"
+   "colour": "#a55b3b",
+   "material": "concrete"
   },
   {
    "at": [
@@ -610,7 +771,8 @@
     0.5,
     3.5
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -623,7 +785,8 @@
     0.5,
     3.5
    ],
-   "colour": "#3b6ea5"
+   "colour": "#3b6ea5",
+   "material": "concrete"
   },
   {
    "at": [
@@ -636,7 +799,8 @@
     0.5,
     3.5
    ],
-   "colour": "#3f9a96"
+   "colour": "#3f9a96",
+   "material": "concrete"
   },
   {
    "at": [
@@ -649,7 +813,8 @@
     0.5,
     3.5
    ],
-   "colour": "#5f9e4f"
+   "colour": "#5f9e4f",
+   "material": "concrete"
   },
   {
    "at": [
@@ -688,7 +853,8 @@
     0.02,
     40
    ],
-   "colour": "#d9c27a"
+   "colour": "#d9c27a",
+   "material": "sand"
   },
   {
    "at": [
@@ -701,7 +867,8 @@
     4.0,
     0.4
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -714,7 +881,8 @@
     4.0,
     0.4
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -727,20 +895,8 @@
     4.0,
     2.8
    ],
-   "colour": "#8d5fa8"
-  },
-  {
-   "at": [
-    20.2,
-    2.0,
-    52.6
-   ],
-   "size": [
-    0.4,
-    4.0,
-    2.8
-   ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -753,7 +909,22 @@
     1.2,
     2.4
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
+  },
+  {
+   "at": [
+    20.2,
+    2.0,
+    52.6
+   ],
+   "size": [
+    0.4,
+    4.0,
+    2.8
+   ],
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -766,7 +937,8 @@
     4.0,
     8.0
    ],
-   "colour": "#8d5fa8"
+   "colour": "#8d5fa8",
+   "material": "concrete"
   },
   {
    "at": [
@@ -779,7 +951,8 @@
     0.3,
     8.0
    ],
-   "colour": "platform"
+   "colour": "platform",
+   "material": "concrete"
   },
   {
    "at": [
@@ -936,6 +1109,110 @@
     3.2
    ],
    "colour": "#3e7a3a"
+  },
+  {
+   "at": [
+    10.0,
+    0.15,
+    30.0
+   ],
+   "size": [
+    3.0,
+    0.3,
+    3.0
+   ],
+   "material": "rubber"
+  },
+  {
+   "at": [
+    15.0,
+    0.15,
+    35.0
+   ],
+   "size": [
+    3.0,
+    0.3,
+    3.0
+   ],
+   "material": "rubber"
+  },
+  {
+   "at": [
+    30.0,
+    1.0,
+    10.0
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    45.0,
+    1.0,
+    -20.0
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    -20.0,
+    1.0,
+    40.0
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    -70.0,
+    1.0,
+    20.0
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    20.0,
+    1.0,
+    -60.0
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
+  },
+  {
+   "at": [
+    62.0,
+    1.0,
+    40.0
+   ],
+   "size": [
+    3.0,
+    2.0,
+    3.0
+   ],
+   "material": "foliage"
   }
  ],
  "declared": [
