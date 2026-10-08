@@ -26,11 +26,22 @@ def r(v):
     return round(v, 4)
 
 
-def box(at, size, colour="floor", turn=None):
-    b = {"at": [r(c) for c in at], "size": [r(c) for c in size], "colour": colour}
+def box(at, size, colour="floor", turn=None, material=None):
+    """A box. With a material and no colour of its own, it is drawn in the material's look
+    (game-playground's PlaygroundMaterials); a liquid material builds a volume, not a body."""
+    b = {"at": [r(c) for c in at], "size": [r(c) for c in size]}
+    if material is None or colour != "floor":
+        b["colour"] = colour
     if turn is not None:
         b["turn"] = [r(c) for c in turn]
+    if material is not None:
+        b["material"] = material
     return b
+
+
+def mat(material, at, size, turn=None):
+    """A box made of [material], in its own look."""
+    return box(at, size, turn=turn, material=material)
 
 
 def ramp_z(x, z_low, y_low, z_high, y_high, width, colour="ramp", thickness=0.5):
@@ -1140,11 +1151,98 @@ def obstacle():
                (0, 1, 60), 0.0, boxes, declared, props=props, wires=wires)
 
 
+# --- Nature --------------------------------------------------------------------------------
+
+def nature():
+    size, wall_h = 220.0, 6.0
+    boxes = [mat("grass", (0, -0.5, 0), (size, 1, size))]
+    boxes += walls(size, wall_h, colour="#6b6f4e")
+    declared = wall_tops(size, wall_h, "the outer walls, 6 m up")
+    props, wires = [], []
+
+    # A snow field in the north-west with an ice rink on it, both a step high.
+    boxes.append(mat("snow", (-55, 0.05, -50), (60, 0.1, 50)))
+    boxes.append(mat("ice", (-55, 0.15, -50), (30, 0.1, 20)))
+    for k in range(4):
+        props.append(prop("crate", -62 + k * 4.0, 0.2, -50, loose=True))
+
+    # A mud pit in the middle, sunk in nothing: a 0.1 m layer that slows whoever crosses it.
+    boxes.append(mat("mud", (0, 0.05, -10), (24, 0.1, 18)))
+
+    # A beach of sand in the east, sloping gently into a pond held in by a stone rim. The water
+    # is a volume from the pond's bed to 0.2 m under the rim: walked into for now.
+    boxes.append(mat("sand", (60, 0.05, 20), (50, 0.1, 40)))
+    px, pz, pw, pd, rim = 60.0, 50.0, 36.0, 24.0, 1.4
+    for side in (-1, 1):
+        boxes.append(mat("rock", (px + side * (pw / 2 + 0.5), rim / 2, pz), (1.0, rim, pd + 2.0)))
+        boxes.append(mat("rock", (px, rim / 2, pz + side * (pd / 2 + 0.5)), (pw, rim, 1.0)))
+    boxes.append(mat("sand", (px, 0.05, pz), (pw, 0.1, pd)))
+    boxes.append(mat("water", (px, (0.1 + rim - 0.2) / 2 + 0.05, pz), (pw, rim - 0.3, pd)))
+    # Steps over the rim on the beach side, in and out.
+    # Over the rim by a 3 m landing on top of it, a ramp each side: two ramps meeting the rim
+    # straight left 0.7 m between them and it, which the survey called a slot.
+    edge = pz - pd / 2 - 0.5
+    boxes.append(mat("rock", (px, rim / 2, edge), (4.0, rim, 3.0)))
+    boxes.append(ramp_z(px, edge - 1.5 - 4.5, 0.1, edge - 1.5, rim, 4.0, "#8a7a62"))
+    boxes.append(ramp_z(px, edge + 1.5 + 4.5, 0.1, edge + 1.5, rim, 4.0, "#8a7a62"))
+    for k in range(3):
+        props.append(prop("barrel", px - 8 + k * 6, 0.1, pz + 4, loose=True))
+        props.append(prop("beach_ball", px - 5 + k * 6, 0.1, pz - 5, loose=True))
+
+    # A lava pit in the south-west, rimmed in rock with a narrow rock bridge across it.
+    lx, lz, lw, ld, lrim = -50.0, 50.0, 18.0, 18.0, 1.0
+    for side in (-1, 1):
+        boxes.append(mat("rock", (lx + side * (lw / 2 + 0.75), lrim / 2, lz), (1.5, lrim, ld + 3.0)))
+        boxes.append(mat("rock", (lx, lrim / 2, lz + side * (ld / 2 + 0.75)), (lw, lrim, 1.5)))
+    boxes.append(mat("rock", (lx, -0.25, lz), (lw, 0.5, ld)))
+    boxes.append(mat("lava", (lx, 0.3, lz), (lw, 0.6, ld)))
+    boxes.append(mat("rock", (lx, lrim - 0.25, lz), (lw + 3.0, 0.5, 1.5)))
+    # Up to the bridge's west end, flush with it (0.25 m short was a slot).
+    boxes.append(ramp_z(lx - lw / 2 - 2.5, lz - 6.0, 0.0, lz - 0.75, lrim, 2.0, "#5a5752"))
+    boxes.append(ramp_z(lx - lw / 2 - 2.5, lz + 6.0, 0.0, lz + 0.75, lrim, 2.0, "#5a5752"))
+    for k in range(3):
+        props.append(prop("crate", lx + lw / 2 + 4.0, 0.0, lz - 4 + k * 4, loose=True))
+
+    # Rubber trampolines on the meadow, 0.3 m pads.
+    for k, at in enumerate(((-15, 30), (-5, 34), (5, 30))):
+        boxes.append(mat("rubber", (at[0], 0.15, at[1]), (4.0, 0.3, 4.0)))
+
+    # A rock outcrop to climb in the north-east, and a wooden lookout on it.
+    boxes.append(mat("rock", (55, 2.0, -50), (20, 4.0, 16)))
+    boxes.append(ramp_z(55, -50 + 8 + 12, 0.0, -50 + 8, 4.0, 6.0, "#5a5752"))
+    boxes.append(mat("wood", (55, 4.15, -50), (6, 0.3, 6)))
+
+    # A greenhouse of glass on a wooden frame, south of the mud: a doorway in the south wall.
+    gx, gz, gw, gd, gh = 0.0, 50.0, 16.0, 10.0, 3.5
+    for side in (-1, 1):
+        boxes.append(mat("glass", (gx + side * (gw / 2 - 0.05), gh / 2, gz), (0.1, gh, gd)))
+    boxes.append(mat("glass", (gx, gh / 2, gz - gd / 2 + 0.05), (gw, gh, 0.1)))
+    for side in (-1, 1):
+        boxes.append(mat("glass", (gx + side * (gw / 4 + 0.75), gh / 2, gz + gd / 2 - 0.05), (gw / 2 - 1.5, gh, 0.1)))
+    boxes.append(mat("glass", (gx, gh + 0.05, gz), (gw, 0.1, gd)))
+    for cx_ in (-gw / 2, 0.0, gw / 2):
+        for cz_ in (-gd / 2, gd / 2):
+            boxes.append(mat("wood", (gx + cx_, gh / 2, gz + cz_), (0.2, gh, 0.2)))
+    declared.append({"min": [gx - gw / 2, gh, gz - gd / 2], "max": [gx + gw / 2, gh + 0.6, gz + gd / 2], "why": "the greenhouse's glass roof"})
+    for k in range(4):
+        props.append(prop("crate", gx - 5 + k * 3, 0.0, gz, loose=True, tint="#5f9e4f"))
+
+    # Trees round the meadow.
+    for at in ((-20, 0), (20, 0), (-25, 70), (25, 70), (90, -20), (-95, 10), (30, -80), (-30, -85)):
+        b, dcl = tree(at[0], at[1])
+        boxes += b
+        declared += dcl
+    props.append(prop("buggy", 20, 0.0, 40, loose=True))
+    return doc("pgc_nature", "Nature",
+               "A meadow with a snow field and an ice rink, a mud pit, a sand beach and a pond, a lava pit with a rock bridge, trampolines, a rock outcrop and a glass greenhouse.",
+               (0, 1, 80), 0.0, boxes, declared, props=props, wires=wires)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse(), canyon(), harbour(), bowl(), obstacle()):
+    for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse(), canyon(), harbour(), bowl(), obstacle(), nature()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:
