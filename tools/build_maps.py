@@ -816,11 +816,335 @@ def canyon():
                (-60.0, rim + 1.0, 0.0), -90.0, boxes, declared, props=props)
 
 
+# --- Harbour ---------------------------------------------------------------------------------
+
+WATER = "#2f5f7a"
+QUAY = "#8c8f94"
+TIMBER = "#8a6a45"
+
+
+def boat(cx, cz, w, l, deck_y, floor_y, hull_c):
+    """A hull standing on the basin floor with its deck at deck_y, and a pointed bow toward -Z:
+    a square turned 45 degrees about its own centre at the hull's end, half inside the hull."""
+    tall = deck_y - floor_y
+    s = w / math.sqrt(2.0)
+    return [box((cx, floor_y + tall / 2.0, cz), (w, tall, l), hull_c),
+            box((cx, floor_y + tall / 2.0, cz - l / 2.0), (s, tall, s), hull_c, (0, 1, 0, 45.0))]
+
+
+def harbour():
+    size, basin = 200.0, -4.0
+    boxes = [box((0, basin - 0.5, 0), (size, 1, size), WATER)]
+    boxes += walls(size, 10.0, basin, "#6d7480")
+    declared = wall_tops(size, 6.0, "the harbour walls, 6 m over the quay")
+    props, wires = [], []
+
+    # The quay, 4 m over the basin floor, along the south; the basin (no water: a lower floor
+    # painted as water) is everything north of z 10. A mole runs out from the quay's east end
+    # to the lighthouse platform.
+    boxes.append(box((0, -2, 55), (size, 4, 90), QUAY))
+    boxes.append(box((80, -2, -29), (8, 4, 78), QUAY))
+    lx, lz = 80.0, -80.0
+    boxes.append(box((lx, -2, lz), (24, 4, 24), QUAY))
+
+    # Two slipways out of the basin, 4 m over 22 (about 10 degrees): the way back up for
+    # whoever is thrown in, and for a buggy.
+    for sx in (-80.0, 55.0):
+        boxes.append(ramp_z(sx, -12.0, basin, 10.0, 0.0, 8.0, "#7d8189"))
+
+    # Three timber piers 50 m out, each with a T-head, on pilings. The decks are 0.4 m slabs
+    # with 3.6 m under them, so the basin floor runs underneath.
+    piers = (-50.0, -10.0, 30.0)
+    for px in piers:
+        boxes.append(box((px, -0.2, -15), (6, 0.4, 50), TIMBER))
+        boxes.append(box((px, -0.2, -43), (14, 0.4, 6), TIMBER))
+        for pz in (5.0, -5.0, -15.0, -25.0, -35.0):
+            for side in (-1, 1):
+                boxes.append(box((px + side * 2.75, -2.2, pz), (0.5, 3.6, 0.5), "#4a3a2a"))
+        for side in (-1, 1):
+            boxes.append(box((px + side * 6.75, -2.2, -43), (0.5, 3.6, 0.5), "#4a3a2a"))
+            boxes.append(box((px + side * 2.75, -2.2, -45.25), (0.5, 3.6, 0.5), "#4a3a2a"))
+
+    # Boats, frozen hulls on the basin floor. The two small ones lie 1.5 m off a pier's pilings
+    # (a gap, not a slot), their decks 1 m under it: a hop down, and a jump back up.
+    for cx, cz, colour in ((-56.5, -22.0, "#c25b4a"), (36.5, -10.0, "#3b6ea5")):
+        boxes += boat(cx, cz, 4.0, 10.0, -1.0, basin, colour)
+        boxes.append(box((cx, -0.1, cz + 3.0), (2.4, 1.8, 2.5), "#e8e2d0"))
+    # The freighter along the mole, its deck half a metre under the quay, a gangway onto it,
+    # two containers on deck and a bridge house at the stern.
+    fx, fz = 69.5, -35.0
+    boxes += boat(fx, fz, 10.0, 40.0, -0.5, basin, "#3a3d42")
+    boxes.append(box((fx, -1.0, fz), (10.05, 0.5, 40.05), "#a03a2a"))
+    boxes.append(bridge((77.0, 0.0, -30.0), (73.5, -0.5, -30.0), 2.5, TIMBER, thickness=0.3))
+    boxes.append(box((fx, 2.5, -20.0), (8.0, 6.0, 6.0), "#e8e2d0"))
+    boxes.append(box((fx, 6.5, -21.0), (2.0, 2.0, 2.0), "#c25b4a"))
+    declared.append({"min": [fx - 4.0, 5.4, -23.0], "max": [fx + 4.0, 8.0, -17.0], "why": "the freighter's bridge house and funnel"})
+    for cx, colour in ((fx - 2.0, "#c2a23a"), (fx + 2.0, "#3f9a96")):
+        boxes.append(box((cx, 0.8, -44.0), (2.4, 2.6, 12.0), colour))
+        declared.append({"min": [cx - 1.2, 2.0, -50.0], "max": [cx + 1.2, 2.6, -38.0], "why": "a container's top, on the freighter"})
+
+    # The lighthouse: a 6 m core in red and white bands, climbed by a square spiral round it.
+    # Each side is a bridge() 3 m up over 6 (27 degrees) between 3 m corner landings; the
+    # last loop's three other sides are a gallery at 21 m, 2.5 m over the lane below it.
+    rise, top = 3.0, 21.0
+    for k in range(8):
+        boxes.append(box((lx, k * 3.0 + 1.5, lz), (6, 3, 6), "#e8e2d0" if k % 2 == 0 else "#c25b4a"))
+    boxes.append(box((lx, 25.25, lz), (6, 2.5, 6), "#f2e6a0"))
+    boxes.append(box((lx, 26.75, lz), (6.4, 0.5, 6.4), "#c25b4a"))
+    declared.append({"min": [lx - 3.2, 26.5, lz - 3.2], "max": [lx + 3.2, 27.5, lz + 3.2], "why": "the lighthouse's roof"})
+    corners = [(4.5, 4.5), (-4.5, 4.5), (-4.5, -4.5), (4.5, -4.5)]
+    steps = int(top / rise)
+    for k in range(1, steps + 1):
+        c = corners[k % 4]
+        boxes.append(box((lx + c[0], k * rise - 0.25, lz + c[1]), (3, 0.5, 3), "#9aa3ad"))
+    for k in range(steps):
+        a, b = corners[k % 4], corners[(k + 1) % 4]
+        d = ((b[0] - a[0]) / 9.0, (b[1] - a[1]) / 9.0)
+        p0 = (lx + a[0] + d[0] * 1.5, k * rise, lz + a[1] + d[1] * 1.5)
+        p1 = (lx + b[0] - d[0] * 1.5, (k + 1) * rise, lz + b[1] - d[1] * 1.5)
+        boxes.append(bridge(p0, p1, 3.0, "#9aa3ad"))
+    for k in range(steps + 1, steps + 4):
+        c = corners[k % 4]
+        boxes.append(box((lx + c[0], top - 0.25, lz + c[1]), (3, 0.5, 3), "#9aa3ad"))
+    for k in range(steps, steps + 3):
+        a, b = corners[k % 4], corners[(k + 1) % 4]
+        boxes.append(box((lx + (a[0] + b[0]) / 2.0, top - 0.25, lz + (a[1] + b[1]) / 2.0),
+                         (6 if a[1] == b[1] else 3, 0.5, 3 if a[1] == b[1] else 6), "#9aa3ad"))
+
+    # Two quay cranes: legs straddling the quay's edge, a gantry, a boom out over the basin and
+    # a container hanging off it.
+    for cx in (-30.0, 10.0):
+        for lzz in (12.0, 20.0):
+            for side in (-1, 1):
+                boxes.append(box((cx + side * 4.0, 7.0, lzz), (1, 14, 1), "#d4a017"))
+        boxes.append(box((cx, 14.75, 16.0), (10, 1.5, 10), "#d4a017"))
+        boxes.append(box((cx, 16.5, 18.0), (4, 2, 4), "#5a5d63"))
+        boxes.append(box((cx, 15.5, -6.0), (1.5, 1.0, 36.0), "#d4a017"))
+        boxes.append(box((cx, 10.95, -14.0), (0.1, 8.1, 0.1), "#3a3d42"))
+        boxes.append(box((cx, 5.6, -14.0), (2.4, 2.6, 6.0), "#a55b3b"))
+        declared.append({"min": [cx - 5.0, 13.9, -24.0], "max": [cx + 5.0, 18.0, 21.0], "why": "a crane's gantry and boom"})
+        declared.append({"min": [cx - 1.2, 6.8, -17.0], "max": [cx + 1.2, 7.6, -11.0], "why": "the container hanging off a crane"})
+
+    # Containers on the quay, one and two high (tops declared).
+    cont = ["#a55b3b", "#3f9a96", "#5f9e4f", "#c2a23a"]
+    for k, (cx, cz, stack) in enumerate(((48.0, 32.0, 2), (48.0, 36.0, 1), (66.0, 32.0, 1), (66.0, 36.0, 2), (57.0, 50.0, 2))):
+        for level in range(stack):
+            boxes.append(box((cx, 1.3 + level * 2.6, cz), (12.0, 2.6, 2.4), cont[(k + level) % 4]))
+        declared.append({"min": [cx - 6.0, 2.5, cz - 1.2], "max": [cx + 6.0, 2.6 * stack + 1.0, cz + 1.2], "why": "a container's top"})
+
+    # The harbour master's office, its door on a button either side.
+    office, door_at, door_yaw, inward = building(-70.0, 40.0, 12.0, 9.0, 4.0, "s", "#e8e2d0")
+    boxes += office
+    n = len(props)
+    props.append(prop("door", door_at[0], 0.0, door_at[1], yaw=door_yaw))
+    props.append(prop("button", door_at[0] + 1.9, 0.0, door_at[1] - inward[1] * 0.33, lift=1.0))
+    props.append(prop("button", door_at[0] - 1.9, 0.0, door_at[1] + inward[1] * 0.33, lift=1.0))
+    wires.append(wire(n + 1, "pressed", n, "toggle"))
+    wires.append(wire(n + 2, "pressed", n, "toggle"))
+    declared.append({"min": [-76.0, 4.0, 35.5], "max": [-64.0, 5.0, 44.5], "why": "the office roof"})
+
+    # Bollards along the quay's edge (0.6 m: a hop), clear of the piers, slipways, mole and
+    # crane legs; lamps further back.
+    for x in range(-90, 95, 10):
+        if any(abs(x - p) < 6 for p in piers) or any(abs(x - s) < 7 for s in (-80, 55)) \
+                or any(abs(x - c) < 7 for c in (-30, 10)) or 72 <= x <= 88:
+            continue
+        boxes.append(box((x, 0.3, 10.8), (0.4, 0.6, 0.4), "#3a3d42"))
+    for x in range(-90, 91, 20):
+        b, dcl = lamp(float(x), 26.0)
+        boxes += b
+        declared += dcl
+
+    # Props: buggies on the quay, cargo on the piers and the freighter, barrels up on the
+    # lighthouse gallery to throw off it, and balls in the basin.
+    for x in (-20.0, 20.0):
+        props.append(prop("buggy", x, 0.0, 60.0, loose=True))
+    for k in range(6):
+        props.append(prop("crate", -12.0 + (k % 3) * 1.05, (k // 3) * 1.0, -42.0, loose=True))
+    for k in range(4):
+        props.append(prop("barrel", -54.0 + k * 1.2, 0.0, -44.0, loose=True))
+    for k in range(5):
+        props.append(prop("crate", fx - 2.0 + (k % 2) * 1.05, -0.5 + (k // 2) * 1.0, -30.0, loose=True, tint="#c2a23a"))
+    for k in range(3):
+        props.append(prop("barrel", lx - 4.5, top, lz - 1.5 + k * 1.5, loose=True))
+    for k in range(4):
+        props.append(prop("plank", 30.0, k * 0.15, 4.0, loose=True))
+    for at in ((-30.0, -60.0), (10.0, -70.0), (45.0, -50.0), (-75.0, -30.0)):
+        props.append(prop("beach_ball", at[0], basin, at[1], loose=True))
+    props.append(prop("crate_large", lx - 8.0, 0.0, lz + 8.0, loose=True))
+    return doc("pgc_harbour", "Harbour",
+               "Three piers over a sunken basin with slipways out, boats to jump onto, quay cranes, a freighter, and a lighthouse climbed by a spiral to throw things off.",
+               (0, 1, 40), 0.0, boxes, declared, props=props, wires=wires)
+
+
+# --- Fling Bowl ------------------------------------------------------------------------------
+
+def _yawed(yaw, axial0, axial1, width, y0, y1, colour):
+    """An upright box whose local Z runs from axial0 to axial1 along the direction yaw (radians)."""
+    mid = (axial0 + axial1) / 2.0
+    return box((math.sin(yaw) * mid, (y0 + y1) / 2.0, math.cos(yaw) * mid), (width, y1 - y0, axial1 - axial0),
+               colour, (0, 1, 0, math.degrees(yaw)))
+
+
+def bowl(facet_extra=2.0):
+    sides, flat, rim_r, outer, h = 24, 14.0, 40.0, 48.0, 15.0
+    boxes = [box((0, -0.5, 0), (2 * (flat + 2), 1, 2 * (flat + 2)), "#d9c27a")]
+    declared = []
+    props = []
+    half = math.pi / sides
+    slope = math.atan2(h, rim_r - flat)
+    # The bowl is a frustum of a 24-sided pyramid: one bridge() per side, from the flat centre's
+    # edge up to the rim. Each is as wide as its side at the rim, so neighbours overlap toward
+    # the middle; where they do, the one whose own axis is nearer is the higher, so the visible
+    # surface is exactly the facet and the seams meet with no lip and no gap. Each slab is thick
+    # enough that its underside is below the ground even at the rim: no hollow under the bowl.
+    thick = h * math.cos(slope) + 0.3
+    for k in range(sides):
+        yaw = 2.0 * math.pi * k / sides
+        d = (math.sin(yaw), math.cos(yaw))
+        # 2 m wider still (hidden under the neighbours either way): the survey reads a tilted
+        # box as its world AABB, and at +0.1 to +1.0 the AABBs of two facets some way apart, or
+        # of a facet and a rim block, came 0.06-0.65 m apart, which it calls a slot. Anything
+        # from +1.2 up clears every pair; 2 leaves a margin.
+        width = 2.0 * rim_r * math.tan(half) + facet_extra
+        boxes.append(bridge((d[0] * flat, 0.0, d[1] * flat), (d[0] * rim_r, h, d[1] * rim_r), width,
+                            "#3b6ea5" if k % 2 == 0 else "#e8e2d0", thickness=thick))
+    # The rim: an 8 m walkway at 15 m on solid blocks, with a 1.5 m parapet round its outside.
+    for k in range(sides):
+        yaw = 2.0 * math.pi * k / sides
+        width = 2.0 * outer * math.tan(half) + 0.1
+        boxes.append(_yawed(yaw, rim_r, outer, width, -1.0, h, "platform"))
+        boxes.append(_yawed(yaw, outer - 1.0, outer, width, h, h + 1.5, "#c25b4a"))
+        c = (math.sin(yaw) * (outer - 0.5), math.cos(yaw) * (outer - 0.5))
+        reach = width / 2.0 + 0.5
+        declared.append({"min": [r(c[0] - reach), h + 1.3, r(c[1] - reach)], "max": [r(c[0] + reach), h + 2.0, r(c[1] + reach)],
+                         "why": "the parapet's top, 1.5 m over the rim"})
+    # A pedestal in the middle (an octagon, 1 m: a jump climbs it), and a diving board off the
+    # north rim, 8 m out over the slope, to be thrown from.
+    boxes.append(box((0, 0.5, 0), (6, 1.0, 6), "#c25b4a"))
+    boxes.append(box((0, 0.5, 0), (6, 1.0, 6), "#c25b4a", (0, 1, 0, 45.0)))
+    boxes.append(box((0, h - 0.2, -(rim_r - 3.5)), (2.5, 0.4, 9.0), "#c2a23a"))
+
+    # Boulders and balls round the rim to roll in, sleds to ride down, beach balls and a buggy
+    # in the middle, crates on the pedestal.
+    for k in range(8):
+        yaw = 2.0 * math.pi * (k + 0.5) / 8.0
+        rr = rim_r + 2.5
+        props.append(prop("boulder", math.sin(yaw) * rr, h, math.cos(yaw) * rr, loose=True))
+    for k in range(8):
+        yaw = 2.0 * math.pi * k / 8.0 + 0.2
+        rr = rim_r + 3.0
+        props.append(prop("ball", math.sin(yaw) * rr, h, math.cos(yaw) * rr, loose=True, tint="#e0702a"))
+    for k in range(4):
+        yaw = 2.0 * math.pi * k / 4.0 + 0.45
+        rr = rim_r + 2.0
+        props.append(prop("plank", math.sin(yaw) * rr, h, math.cos(yaw) * rr, yaw=math.degrees(yaw), loose=True,
+                          tint="#e0a052", physics={"gravity": True, "weight": 1.0, "friction": 0.05, "bounce": 0.0}))
+    for at in ((-8.0, 6.0), (8.0, 6.0), (0.0, -9.0)):
+        props.append(prop("beach_ball", at[0], 0.0, at[1], loose=True))
+    for k in range(3):
+        props.append(prop("crate", -1.05 + k * 1.05, 1.0, 0.0, loose=True))
+    props.append(prop("crate", 0.0, 2.0, 0.0, loose=True))
+    props.append(prop("buggy", 8.0, 0.0, -6.0, yaw=90.0, loose=True))
+    return doc("pgc_bowl", "Fling Bowl",
+               "A 96 m bowl with 30-degree sides, a rim walkway with boulders to roll in, sleds to ride down, a pedestal in the middle and a diving board to be thrown off.",
+               (0, h + 1.0, 44.0), 0.0, boxes, declared, props=props)
+
+
+# --- Obstacle Park ---------------------------------------------------------------------------
+
+def obstacle():
+    size, wall_h = 160.0, 6.0
+    boxes = [box((0, -0.5, 0), (size, 1, size), "#4f6b45")]
+    boxes += walls(size, wall_h, colour="#6d7480")
+    declared = wall_tops(size, wall_h, "the outer walls, 6 m up")
+    props, wires = [], []
+    shades = ["#3b6ea5", "#3f9a96", "#5f9e4f", "#c2a23a", "#a55b3b", "#8d5fa8"]
+
+    # Jumps are sized to the player: a running jump clears 4.75 m level, 3.68 m rising 0.8 and
+    # 3.23 m rising 1.0, and climbs 1.035 m at most. Nothing here asks for more than 2.5 m.
+    boxes.append(box((0, 0.1, 60), (10, 0.2, 10), "start"))
+    # 1. The steps: four 1 m risers, each a jump.
+    for k in range(4):
+        boxes.append(box((0, (k + 1) / 2.0, 52.0 - 3.0 * k), (6, k + 1.0, 3), shades[k]))
+    # 2. Stepping stones at 4 m, 2 m square, 2.5 m apart, in a zigzag.
+    for j in range(6):
+        boxes.append(box((-1.5 if j % 2 == 0 else 1.5, 2.0, 38.0 - 4.5 * j), (2, 4, 2), shades[j % 6]))
+    # 3. A 0.8 m balance beam, 12 m long, onto a landing.
+    boxes.append(box((1.5, 3.8, 6.0), (0.8, 0.4, 12.0), "#c2a23a"))
+    for z in (2.0, 10.0):
+        boxes.append(box((1.5, 1.8, z), (0.4, 3.6, 0.4), "#3a3d42"))
+    boxes.append(box((0.5, 2.0, -3.0), (6, 4, 6), "platform"))
+    # 4. The climb: five blocks west, each 0.8 m higher, 2 m apart. The landing is 6 m wide so
+    # there are 4 m to turn and run in off the beam: at 4 m wide a bot driving the course missed
+    # the first block every time on its first try (2.0 m gap and 1.5 m alike), short of speed.
+    for i in range(5):
+        top = 4.8 + 0.8 * i
+        boxes.append(box((-6.0 - 5.0 * i, top / 2.0, -3.0), (3, top, 3), shades[(i + 1) % 6]))
+    # 5. The gate: a platform at 8 m with a wall across it, through a door on a button.
+    gx, gz, gy = -35.5, -3.0, 8.0
+    boxes.append(box((gx, gy / 2.0, gz), (10, gy, 10), "platform"))
+    for z0, z1 in ((-8.0, -4.2), (-1.8, 2.0)):
+        boxes.append(box((gx, gy + 1.5, (z0 + z1) / 2.0), (0.4, 3.0, z1 - z0), "#c25b4a"))
+    boxes.append(box((gx, gy + 2.9, gz), (0.4, 0.2, 2.4), "#c25b4a"))
+    declared.append({"min": [gx - 0.3, gy + 2.8, -8.0], "max": [gx + 0.3, gy + 3.5, 2.0], "why": "the gate wall's top"})
+    n = len(props)
+    props.append(prop("door", gx, gy, gz, yaw=90.0))
+    props.append(prop("button", gx + 0.33, gy, gz + 1.9, yaw=90.0, lift=1.0))
+    props.append(prop("button", gx - 0.33, gy, gz - 1.9, yaw=90.0, lift=1.0))
+    wires.append(wire(n + 1, "pressed", n, "toggle"))
+    wires.append(wire(n + 2, "pressed", n, "toggle"))
+    # 6. The tower: an 8 m core 20 m tall, climbed by fifteen ledges spiralling round it, each
+    # 0.8 m over the last and 2.25 m from it; a loop is 6.4 m, so there is headroom under every
+    # ledge. The last is level with the top: the deck to be thrown from.
+    tx, tz, top = -50.0, -3.0, 20.0
+    for k in range(5):
+        boxes.append(box((tx, k * 4.0 + 2.0, tz), (8, 4, 8), "#e8e2d0" if k % 2 == 0 else "#9aa3ad"))
+    ring = [(5.75, 0.0), (5.75, 5.75), (0.0, 5.75), (-5.75, 5.75), (-5.75, 0.0), (-5.75, -5.75), (0.0, -5.75), (5.75, -5.75)]
+    for k in range(15):
+        o = ring[k % 8]
+        boxes.append(box((tx + o[0], 8.8 + 0.8 * k - 0.25, tz + o[1]), (3.5, 0.5, 3.5), shades[k % 6]))
+    boxes.append(box((tx + 3.0, top + 2.0, tz + 3.0), (0.2, 4.0, 0.2), "#3a3d42"))
+    boxes.append(box((tx + 3.0, top + 3.4, tz + 2.2), (0.1, 1.0, 1.4), "#c25b4a"))
+    declared.append({"min": [tx + 2.8, top + 2.8, tz + 1.4], "max": [tx + 3.2, top + 4.5, tz + 3.2], "why": "the flag on the tower"})
+    # A sand pit round the tower's foot, where the thrown land.
+    boxes.append(box((tx, 0.01, tz), (40, 0.02, 40), "#d9c27a"))
+
+    # The vault by the start: shut, and opened by the button on top of the tower.
+    vault, door_at, door_yaw, inward = building(25.0, 50.0, 10.0, 8.0, 4.0, "w", "#8d5fa8")
+    boxes += vault
+    declared.append({"min": [20.0, 4.0, 46.0], "max": [30.0, 5.0, 54.0], "why": "the vault's roof"})
+    n = len(props)
+    props.append(prop("door", door_at[0], 0.0, door_at[1], yaw=door_yaw))
+    props.append(prop("button", tx - 2.0, top, tz - 2.0, lift=0.0))
+    wires.append(wire(n + 1, "pressed", n, "toggle"))
+    for k in range(3):
+        props.append(prop("beach_ball", 23.0 + k * 0.0, 0.0, 47.5 + k * 2.5, loose=True))
+    props.append(prop("die", 28.0, 0.0, 48.0, loose=True, scale=2.0))
+    props.append(prop("crate", 28.0, 0.0, 52.0, loose=True, tint="#c2a23a"))
+
+    # Trees round the field, crates and balls to throw from the tower, buggies by the start.
+    for at in ((40.0, -40.0), (-60.0, 50.0), (60.0, 10.0), (-10.0, -50.0), (55.0, -65.0), (-65.0, -55.0)):
+        b, dcl = tree(at[0], at[1])
+        boxes += b
+        declared += dcl
+    for k in range(3):
+        props.append(prop("crate", tx + 1.5 - k * 1.05, top, tz + 1.0, loose=True))
+    props.append(prop("ball", tx - 2.0, top, tz + 2.0, loose=True, tint="#e0702a"))
+    for x in (12.0, 18.0):
+        props.append(prop("buggy", x, 0.0, 68.0, loose=True))
+    for k in range(6):
+        props.append(prop("crate", -12.0 + (k % 3) * 1.05, (k // 3) * 1.0, 62.0, loose=True))
+    return doc("pgc_obstacle", "Obstacle Park",
+               "A course of steps, stepping stones, a balance beam and a climb to a gate on a button, then a tower of spiral ledges to a deck to be thrown from, whose button opens a vault.",
+               (0, 1, 60), 0.0, boxes, declared, props=props, wires=wires)
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
-    for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse(), canyon()):
+    for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse(), canyon(), harbour(), bowl(), obstacle()):
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:

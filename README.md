@@ -10,6 +10,9 @@ Custom sandbox maps for [game-playground](../game-playground), as JSON documents
 - `maps/pgc_site.json` — **Construction Site**: a half-built frame climbed by switchback ramps, a tower crane, material piles, a site office, and a kicker and bumps for the buggies.
 - `maps/pgc_warehouse.json` — **Warehouse**: a warehouse at dock height with racking full of crates, a catwalk with barrels, an office, and a yard of containers.
 - `maps/pgc_canyon.json` — **Canyon**: two mesas either side of a canyon, a road bridge, a balance beam, a broken bridge to jump in a buggy, and boulders to push in.
+- `maps/pgc_harbour.json` — **Harbour**: piers over a sunken basin with slipways out, boats to jump onto, quay cranes, a freighter, and a lighthouse climbed by a spiral to throw things off.
+- `maps/pgc_bowl.json` — **Fling Bowl**: a 30-degree bowl with a rim walkway, boulders and sleds to send down it, a pedestal in the middle, and a diving board.
+- `maps/pgc_obstacle.json` — **Obstacle Park**: steps, stepping stones, a beam and a climb to a gate on a button, then a spiral of ledges up a tower whose button opens a vault.
 
 The game picks these up through a link (`game-playground/maps/custom`, made by dot-bootstrap) or, delivered, as a pack the game names under `dependencies`. Edit `tools/build_maps.py` and run it to change a map; the format is described in game-playground's `maps/pg_data.gd`.
 
