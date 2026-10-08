@@ -845,13 +845,18 @@ def boat(cx, cz, w, l, deck_y, floor_y, hull_c):
 
 def harbour():
     size, basin = 200.0, -4.0
-    boxes = [box((0, basin - 0.5, 0), (size, 1, size), WATER)]
+    # The seabed, dark: the water above it is a real volume now and does the colouring.
+    boxes = [box((0, basin - 0.5, 0), (size, 1, size), "#2b3a40")]
     boxes += walls(size, 10.0, basin, "#6d7480")
+    # The water: the whole basin, 3.4 m deep, its surface 0.6 m under the quay's edge. Swum in
+    # (dot-player-controller's swim mode), floated on (props lighter than it), climbed out of
+    # up the slipways or with a jump at a pier's ladderless edge (0.6 m, under a jump).
+    boxes.append(mat("water", (0, basin + 1.7, -45.0), (size - 2.0, 3.4, 110.0)))
     declared = wall_tops(size, 6.0, "the harbour walls, 6 m over the quay")
     props, wires = [], []
 
-    # The quay, 4 m over the basin floor, along the south; the basin (no water: a lower floor
-    # painted as water) is everything north of z 10. A mole runs out from the quay's east end
+    # The quay, 4 m over the basin floor, along the south; the basin is everything north of
+    # z 10, filled with water to 0.6 m under the quay. A mole runs out from the quay's east end
     # to the lighthouse platform.
     boxes.append(box((0, -2, 55), (size, 4, 90), QUAY))
     boxes.append(box((80, -2, -29), (8, 4, 78), QUAY))
