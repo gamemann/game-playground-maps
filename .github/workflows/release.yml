@@ -1,0 +1,32 @@
+# Tag it (v*) and the maps are attached to the GitHub Release as
+# game-playground-maps-<version>-pack.zip, which website-city's release sync publishes and signs
+# as gamemann/game-playground-maps. A server owner names this pack for game-playground in cfg/content.yml; the
+# server mounts it and sends it to every player, because a playground client builds the map itself.
+#
+# It signs nothing and publishes nothing itself; see modcommunity/dot-ci.
+name: Release
+
+on:
+    push:
+        tags: ['v*']
+
+jobs:
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+            - run: python3 tools/build_maps.py --check
+
+    release:
+        needs: check
+        uses: modcommunity/dot-ci/.github/workflows/release.yml@v1.2.4
+        permissions:
+            contents: write
+        with:
+            pack: true
+            # Data, with no scripts and no addons: there is no requires.json to compare
+            # against a server's addons.
+            server-compat: false

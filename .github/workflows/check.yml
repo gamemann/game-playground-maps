@@ -1,0 +1,22 @@
+# Every document is what tools/build_maps.py writes. A hand edit to a .json the builder knows about
+# would be overwritten by the next build with nothing to say so; this says so first.
+#
+# Playing every map is game-playground's job (its playground_client suite in dot-server-deploy loads them),
+# because it needs the game; this repository's own check is only that its documents and its builder agree.
+name: Check
+
+on:
+    push:
+        branches: ['**']
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    build-check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: '3.12'
+            - run: python3 tools/build_maps.py --check
