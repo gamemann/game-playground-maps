@@ -38,3 +38,4 @@ Read the family [CLAUDE.md](../../CLAUDE.md) and game-playground's [CLAUDE.md](.
 - Declare what is meant to be unreached (crane jibs, shelves, container tops, lake beds) rather than let the survey fail on it. [building](docs/building.md#checking-a-map)
 - A survey slot between tilted boxes may be the AABB reading; check before believing it. [history](docs/history.md#the-bowls-sixteen-slots-that-were-not-there)
 - The pack is a `dependencies` pack, not `server_dependencies`: the client builds the map too. [building](docs/building.md#delivery)
+- `project.godot` exists only so dot-ci's release can import this repository and attach the `-pack.zip`; it carries the editor's own header and no comments, because the editor rewrites the file on its first save and a checkout would show it modified.

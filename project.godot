@@ -1,7 +1,10 @@
-; game-playground-maps is data, not a game: custom sandbox maps game-playground reads.
-; It is a Godot project only so dot-ci's release can import it and attach the -pack.zip
-; the site publishes — the pack game-playground's game.yml would name under
-; `dependencies` (not server_dependencies: a client builds the map too).
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
