@@ -1560,11 +1560,299 @@ def nature():
                (0, 1, 80), 0.0, boxes, declared, props=props, wires=wires)
 
 
+# --- Toys ------------------------------------------------------------------------------------
+#
+# dot-props' toys (game-playground builds them from the document's `toys`, both ends, in this
+# order: the order is how a client pairs each with the server's). A map says roughly where it
+# wants each one, `(id, x, z)` near a floor at about `y`, and `settle` moves it to the nearest
+# spot within 14 m that is floored flat under its whole footprint (no liquid, no foliage), clear
+# of every solid box, prop and toy already placed by half a metre, with five metres of air over
+# a trampoline or a pad and a pad's seven metres of flight ahead of it clear. A hint that finds
+# nowhere is an error, never a toy left out, because a switch names its lamps by index.
+
+# What each toy stands in, in its own frame, as dot-props' DotPropToy._footprint (and the
+# loose toys' sizes): x0, x1, z0, z1, height.
+TOY_BOX = {
+    "beach_ball": (-0.5, 0.5, -0.5, 0.5, 1.0), "football": (-0.15, 0.15, -0.15, 0.15, 0.3),
+    "bowling_ball": (-0.15, 0.15, -0.15, 0.15, 0.3), "bowling_pin": (-0.1, 0.1, -0.1, 0.1, 0.4),
+    "barrel": (-0.35, 0.35, -0.35, 0.35, 0.9), "tyre": (-0.45, 0.45, -0.45, 0.45, 0.3),
+    "punching_bag": (-1.0, 0.6, -0.6, 0.6, 2.6), "swing": (-1.1, 1.1, -1.4, 1.4, 2.4),
+    "seesaw": (-1.6, 1.6, -0.3, 0.3, 0.9), "merry_go_round": (-1.4, 1.4, -1.4, 1.4, 1.0),
+    "wobbly_platform": (-0.8, 0.8, -0.8, 0.8, 0.6), "trampoline": (-1.2, 1.2, -1.2, 1.2, 0.8),
+    "bounce_pad": (-0.6, 0.6, -0.6, 0.6, 0.3), "light_switch": (-0.3, 0.3, -0.3, 0.3, 1.2),
+    "lamp_post": (-0.3, 0.3, -0.3, 0.3, 2.7), "fountain": (-0.9, 0.9, -0.9, 0.9, 1.2),
+    "horn": (-0.3, 0.3, -0.3, 0.3, 1.5), "bell": (-0.7, 0.7, -0.3, 0.3, 2.3),
+}
+LAUNCHERS = ("trampoline", "bounce_pad")
+# Built with no collider (game-playground's PlaygroundMaterials.is_volume), or not a floor to
+# put a toy on (thin ice breaks).
+NOT_FLOOR = ("water", "lava", "slime", "foliage", "thin_ice")
+NO_BODY = ("water", "lava", "slime", "foliage")
+PROP_REACH = {"buggy": 2.6, "door": 1.6, "crate_large": 1.6, "boulder": 1.8, "pillar": 1.0}
+
+
+def toy(id_, x, z, y=0.0, yaw=0.0, links=None, on=None, exact=False):
+    """A toy hint: roughly where a map wants it, near a floor at about y. Exact puts it there
+    (still floored and clear of the boxes), for a set laid out together: a rack of pins."""
+    return {"toy": id_, "x": x, "z": z, "y": y, "yaw": yaw, "links": links, "on": on, "exact": exact}
+
+
+def pins(x, z, y=0.0, toward=0.0):
+    """Six bowling pins in a triangle at (x, z), its point toward yaw [toward] (0 is +z)."""
+    out = []
+    ca, sa = math.cos(math.radians(toward)), math.sin(math.radians(toward))
+    for row in range(3):
+        for i in range(row + 1):
+            lx, lz = (i - row * 0.5) * 0.45, -row * 0.4
+            out.append(toy("bowling_pin", r(x + lx * ca + lz * sa), r(z - lx * sa + lz * ca), y, exact=True))
+    return out
+
+
+def _aabb(b):
+    """A box's world AABB as (min, max); a turned one's is the box round its turned corners."""
+    c, s = b["at"], b["size"]
+    if "turn" not in b:
+        return [c[i] - s[i] / 2.0 for i in range(3)], [c[i] + s[i] / 2.0 for i in range(3)]
+    # [axis x, y, z, degrees], as a quaternion.
+    ax, ay, az, deg = b["turn"]
+    n = math.sqrt(ax * ax + ay * ay + az * az) or 1.0
+    h = math.radians(deg) / 2.0
+    q = (ax / n * math.sin(h), ay / n * math.sin(h), az / n * math.sin(h), math.cos(h))
+    lo, hi = [1e9] * 3, [-1e9] * 3
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            for sz in (-1, 1):
+                v = _rotate(q, (sx * s[0] / 2.0, sy * s[1] / 2.0, sz * s[2] / 2.0))
+                for i in range(3):
+                    lo[i] = min(lo[i], c[i] + v[i])
+                    hi[i] = max(hi[i], c[i] + v[i])
+    return lo, hi
+
+
+def _floor_of(b, lo, hi):
+    """Whether a point (x, z) is over this box's flat top, or None for a box whose top is not
+    flat (a ramp). A box turned about +y only (the bowl's rim) is flat on top too."""
+    if "turn" not in b:
+        return lambda x, z: lo[0] <= x <= hi[0] and lo[2] <= z <= hi[2]
+    ax, ay, az, deg = b["turn"]
+    if abs(ax) > 1e-6 or abs(az) > 1e-6:
+        return None
+    a = math.radians(deg if ay > 0 else -deg)
+    cx, cz = b["at"][0], b["at"][2]
+    hx, hz = b["size"][0] / 2.0, b["size"][2] / 2.0
+    ca, sa = math.cos(a), math.sin(a)
+
+    def inside(x, z):
+        dx, dz = x - cx, z - cz
+        # Into the box's frame: the inverse of x' = x cos + z sin, z' = -x sin + z cos.
+        lx, lz = dx * ca - dz * sa, dx * sa + dz * ca
+        return abs(lx) <= hx and abs(lz) <= hz
+    return inside
+
+
+def _footprint(id_, x, z, yaw, margin):
+    x0, x1, z0, z1, h = TOY_BOX[id_]
+    ca, sa = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
+    xs, zs = [], []
+    for lx in (x0, x1):
+        for lz in (z0, z1):
+            # Godot's yaw about +y: x' = x cos + z sin, z' = -x sin + z cos.
+            xs.append(x + lx * ca + lz * sa)
+            zs.append(z - lx * sa + lz * ca)
+    return (min(xs) - margin, max(xs) + margin, min(zs) - margin, max(zs) + margin, h)
+
+
+def _overlaps(a, lo, hi, y0, y1):
+    return a[0] < hi[0] and a[1] > lo[0] and a[2] < hi[2] and a[3] > lo[2] and y0 < hi[1] and y1 > lo[1]
+
+
+def _spot_ok(d, solids, floors, placed, hint, x, z):
+    id_ = hint["toy"]
+    fp = _footprint(id_, x, z, hint["yaw"], 0.0)
+    near = _footprint(id_, x, z, hint["yaw"], 0.5)
+    # Floored flat: the same top under the middle and all four corners, nearest the hint's y.
+    tops = None
+    for px, pz in ((x, z), (fp[0], fp[2]), (fp[0], fp[3]), (fp[1], fp[2]), (fp[1], fp[3])):
+        here = set()
+        for inside, top_y, mat_ in floors:
+            if inside(px, pz):
+                here.add((round(top_y, 3), mat_ in NOT_FLOOR))
+        tops = here if tops is None else tops & here
+    good = [t for t, bad in (tops or set()) if not bad and not any(t2 > t and t2 - t < 0.05 for t2, _ in tops)]
+    if not good:
+        return None
+    top = min(good, key=lambda t: abs(t - hint["y"]))
+    if abs(top - hint["y"]) > 3.0:
+        return None
+    height = 5.0 if id_ in LAUNCHERS else max(near[4], 2.0) + 0.3
+    for lo, hi in solids:
+        if _overlaps(near, lo, hi, top + 0.05, top + height):
+            return None
+    if id_ == "bounce_pad":
+        # Its flight: seven metres along its arrow (+z turned by yaw), a metre and a half wide.
+        ca, sa = math.cos(math.radians(hint["yaw"])), math.sin(math.radians(hint["yaw"]))
+        for k in range(1, 8):
+            fx, fz = x + sa * k, z + ca * k
+            lane = (fx - 0.8, fx + 0.8, fz - 0.8, fz + 0.8)
+            if any(_overlaps(lane, lo, hi, top + 0.3, top + 4.0) for lo, hi in solids):
+                return None
+    for p in d.get("props", []):
+        reach = PROP_REACH.get(p["id"], 1.2)
+        px, py, pz = p["at"]
+        if abs(py - top) < 3.5 and near[0] - reach < px < near[1] + reach and near[2] - reach < pz < near[3] + reach:
+            return None
+    for other, ofp in placed:
+        if hint["exact"]:
+            break
+        if near[0] < ofp[1] and near[1] > ofp[0] and near[2] < ofp[3] and near[3] > ofp[2] and abs(other["at"][1] - top) < 3.0:
+            return None
+    sx, sy, sz = d["spawn"]
+    if math.hypot(x - sx, z - sz) < 3.0 and abs(sy - top) < 3.0:
+        return None
+    return top
+
+
+def settle(d, hints):
+    """Places each hint at the nearest clear, flat, floored spot (see above). Raises when one
+    finds nowhere within 14 m."""
+    solids, floors = [], []
+    for b in d["boxes"]:
+        lo, hi = _aabb(b)
+        mat_ = b.get("material")
+        if mat_ not in NO_BODY:
+            solids.append((lo, hi))
+        floor = _floor_of(b, lo, hi)
+        if floor is not None:
+            floors.append((floor, hi[1], mat_))
+    placed = []
+    out = []
+    for hint in hints:
+        found = None
+        for ring in range(0, 1 if hint["exact"] else 29):
+            r_ = ring * 0.5
+            steps = max(1, int(round(2 * math.pi * r_ / 0.5))) if r_ > 0 else 1
+            for k in range(steps):
+                a = 2 * math.pi * k / steps
+                x, z = r(hint["x"] + r_ * math.cos(a)), r(hint["z"] + r_ * math.sin(a))
+                top = _spot_ok(d, solids, floors, placed, hint, x, z)
+                if top is not None:
+                    found = (x, top, z)
+                    break
+            if found:
+                break
+        if found is None:
+            raise SystemExit(f"{d['id']}: nowhere for {hint['toy']} near ({hint['x']}, {hint['z']})")
+        t = {"toy": hint["toy"], "at": [found[0], r(found[1]), found[2]]}
+        if hint["yaw"]:
+            t["yaw"] = hint["yaw"]
+        if hint["links"]:
+            t["links"] = hint["links"]
+        if hint["on"] is not None:
+            t["on"] = hint["on"]
+        out.append(t)
+        placed.append((t, _footprint(hint["toy"], found[0], found[2], hint["yaw"], 0.0)))
+    return out
+
+
+# Each map's toys, by theme. A switch's `links` are indices in its own map's list.
+TOYS = {
+    # The plaza: balls to kick about, a little playground off its corners, lamps on a switch.
+    "pgc_plots": [
+        toy("beach_ball", -5, -6, 0.2), toy("beach_ball", 5, -8, 0.2), toy("football", -3, 7, 0.2),
+        toy("tyre", 4, 6, 0.2, yaw=30), toy("merry_go_round", -7, 8, 0.2), toy("seesaw", 0, -10, 0.2),
+        toy("swing", -10, -3, 0.2, yaw=90), toy("lamp_post", -4, 11, 0.2), toy("lamp_post", 4, 11, 0.2),
+        toy("light_switch", 0, 10, 0.2, links=[7, 8]), toy("bell", 10, 9, 0.2), toy("horn", -10, 10, 0.2),
+    ],
+    # A working quarry: tyres and barrels on the rim to roll in, a horn and a bell to signal a
+    # blast, lamps on a switch by the blasting hut, and tyres on the pit floor.
+    "pgc_quarry": [
+        toy("tyre", -6, 56, 0.0, yaw=20), toy("tyre", 7, 64, 0.0, yaw=70), toy("barrel", -26, 57, 0.0),
+        toy("barrel", 27, 63, 0.0), toy("horn", -30, 64, 0.0), toy("bell", 30, 56, 0.0),
+        toy("lamp_post", -34, 7, -6.0), toy("lamp_post", -34, -7, -6.0),
+        toy("light_switch", -33, 9, -6.0, links=[6, 7]), toy("tyre", 10, -6, -12.0, yaw=45),
+        toy("tyre", -6, 12, -12.0), toy("barrel", 12, 10, -12.0),
+    ],
+    # Balls and tyres on the deck to send down the hill, a bell up there, and a little
+    # playground by the spawn.
+    "pgc_slopes": [
+        toy("beach_ball", -10, -13, 20.0), toy("beach_ball", 10, -13, 20.0), toy("beach_ball", 0, -11.5, 20.0),
+        toy("tyre", -12, -22, 20.0), toy("tyre", 12, -22, 20.0), toy("bell", 12, -16, 20.0),
+        toy("swing", 14, 80), toy("seesaw", -13, 78), toy("wobbly_platform", -9, 88),
+        toy("merry_go_round", 12, 90), toy("football", 5, 70),
+    ],
+    # Lamps down the north road on a switch, a bell on the plaza, a little park by the stage,
+    # a horn in the car park, balls on the crossing.
+    "pgc_town": [
+        toy("lamp_post", 9, 60), toy("lamp_post", 9, 40), toy("lamp_post", -9, 60), toy("lamp_post", -9, 40),
+        toy("light_switch", 9, 70, links=[0, 1, 2, 3]), toy("bell", 33, 37, 0.15), toy("football", 3, 12),
+        toy("beach_ball", -4, 20), toy("swing", 62, 60, 0.15), toy("seesaw", 62, 52, 0.15),
+        toy("merry_go_round", 64, 76, 0.15), toy("horn", 50, -70), toy("barrel", 60, -86), toy("barrel", 61, -87),
+    ],
+    # A ball on each island to kick off, a bell on the top one, a wobbly platform half way.
+    "pgc_islands": [
+        toy("beach_ball", 55 + 3, -3, 8.0), toy("beach_ball", 27.5 + 3, 47.6, 13.0), toy("beach_ball", -27.5, 47.6 - 3, 18.0),
+        toy("beach_ball", -55 + 3, 0, 23.0), toy("wobbly_platform", -27.5 + 3, -47.6, 28.0),
+        toy("bell", 27.5 - 3, -47.6 + 3, 33.0), toy("football", 50, -60, 0.0),
+    ],
+    # A site: barrels and tyres in stacks, a horn and a bell for the shift, lamps on a switch by
+    # the office, a punching bag in the yard.
+    "pgc_site": [
+        toy("barrel", 12, 50), toy("barrel", 13, 50.8), toy("barrel", 12.5, 51.7), toy("tyre", 18, 55, yaw=10),
+        toy("tyre", 20, 55), toy("tyre", 19, 57, yaw=50), toy("horn", -10, 64), toy("bell", 10, 66),
+        toy("lamp_post", -44, 52), toy("lamp_post", -56, 52), toy("light_switch", -47, 54, links=[8, 9]),
+        toy("punching_bag", 24, 64),
+    ],
+    # A bowling lane down the hall's south aisle, barrels in the yard, a horn by the loading
+    # doors, lamps on a switch outside.
+    "pgc_warehouse": [
+        toy("bowling_ball", 0, 0, 1.2, exact=True),
+        *pins(0, -14, 1.2, toward=0.0),
+        toy("barrel", 10, 40), toy("barrel", 10.8, 40.6), toy("barrel", 11.6, 40), toy("football", -8, 44),
+        toy("horn", 26, 12), toy("lamp_post", -12, 52), toy("lamp_post", 12, 52), toy("light_switch", 0, 50, links=[13, 14]),
+    ],
+    # Tyres and barrels on the mesas to roll into the canyon, a ball, a horn by the road bridge.
+    "pgc_canyon": [
+        toy("tyre", -55, 6, 20.0, yaw=90), toy("tyre", -55, -6, 20.0, yaw=90), toy("barrel", -50, 12, 20.0),
+        toy("tyre", 55, 6, 20.0, yaw=90), toy("barrel", 50, -12, 20.0), toy("beach_ball", -64, 8, 20.0),
+        toy("horn", -26, -8, 20.0), toy("bell", 26, 8, 20.0),
+    ],
+    # A harbour: a bell on the quay, a horn on the mole, lamps along the quay on a switch,
+    # barrels and tyres (fenders) to throw in.
+    "pgc_harbour": [
+        toy("bell", 6, 44), toy("lamp_post", -16, 36), toy("lamp_post", 0, 34), toy("lamp_post", 16, 36),
+        toy("light_switch", -4, 44, links=[1, 2, 3]), toy("barrel", 20, 44), toy("barrel", 20.8, 44.6),
+        toy("tyre", -20, 44, yaw=30), toy("tyre", -22, 45), toy("horn", 30, 46), toy("football", -8, 48),
+    ],
+    # The fling bowl: balls and a bowling ball on the rim to push in, a rack of pins on the
+    # floor for the bowling ball to find, tyres to roll down.
+    "pgc_bowl": [
+        toy("bowling_ball", 2.5, 44, 15.0), toy("beach_ball", -4, 44, 15.0), toy("beach_ball", 31, 31, 15.0),
+        toy("beach_ball", -31, 31, 15.0), toy("tyre", 44, 0, 15.0, yaw=90), toy("tyre", -44, 0, 15.0, yaw=90),
+        *pins(0, 9, 0.0, toward=0.0),
+        toy("bell", 6, 44, 15.0),
+    ],
+    # The park beside the course: a little playground off the start, balls to kick about.
+    "pgc_obstacle": [
+        toy("swing", -16, 66), toy("seesaw", -16, 74), toy("merry_go_round", -24, 70), toy("wobbly_platform", -10, 78),
+        toy("beach_ball", 8, 70), toy("beach_ball", 12, 66), toy("football", 6, 76), toy("bell", -6, 70),
+    ],
+    # The meadow: a playground and a fountain by the spawn, lamps on a switch, balls on the grass.
+    "pgc_nature": [
+        toy("swing", -14, 72), toy("seesaw", -14, 80), toy("merry_go_round", -22, 76), toy("fountain", 14, 72),
+        toy("lamp_post", 10, 66), toy("lamp_post", 18, 66), toy("light_switch", 14, 64, links=[4, 5]),
+        toy("beach_ball", 6, 88), toy("football", -4, 66), toy("tyre", 22, 84), toy("trampoline", -22, 88),
+    ],
+}
+
+
 def main():
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
     for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse(), canyon(), harbour(), bowl(), obstacle(), nature()):
+        hints = TOYS.get(d["id"], [])
+        if hints:
+            d["toys"] = settle(d, hints)
         path = MAPS / f"{d['id']}.json"
         text = json.dumps(d, indent=1) + "\n"
         if check:

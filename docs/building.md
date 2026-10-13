@@ -34,6 +34,10 @@ A document may list `props` (catalogue ids, frozen unless `loose`) and `wires` b
 
 **Never put a loose prop under water.** game-playground's buoyancy (`_float_props`) launches a prop put down on a bed: a beach ball on the harbour's bed went two kilometres up. A prop is placed floating at its own waterline; game-playground's `tools/map_props.gd` loads every map and finds one that is not.
 
+## Toys
+
+Each map's `toys` are dot-props' toy placements (`{toy, at, yaw, links?}`), which game-playground builds on both ends in the document's order; a switch's `links` are indices into that list. The builder's `TOYS` table says roughly where each map wants each toy (`toy(id, x, z, y)`, themed per map), and `settle` moves it to the nearest spot within 14 m that is floored flat under its whole footprint (never on water, lava, slime, foliage or thin ice), half a metre clear of every solid box, prop and toy already placed, with five metres of air over a trampoline or pad and a pad's flight clear. `exact=True` keeps a set laid out together where it is (`pins()`, a rack of six). A hint that settles nowhere stops the build rather than leaving a toy out, because a later switch would then name the wrong lamps. game-playground's `headless_playground` (`_test_every_maps_toys_stand_clear`) loads every map and checks each toy is built, inside nothing, and still where it was put two seconds later.
+
 ## Checking a map
 
 - game-playground's `headless_playground` surveys every map ([Every hand-built map is surveyed](../../game-playground/docs/maps.md#every-hand-built-map-is-surveyed)): no slot, nothing unreached but what the document declares (crane jibs, shelves, container tops, lake beds), no trap.

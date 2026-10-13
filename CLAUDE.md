@@ -34,6 +34,7 @@ Read the family [CLAUDE.md](../../CLAUDE.md) and game-playground's [CLAUDE.md](.
 - Glass fills its opening the wall's whole thickness; windows stay 3 m from a doorway's buttons. [building](docs/building.md#the-builder)
 - Never give a slow material (grass, dirt, sand, snow) to anything a jump was measured on. [building](docs/building.md#materials)
 - Never put a loose prop under water; place it at its waterline. [building](docs/building.md#props-and-wires)
+- Toys are hints in `TOYS` that `settle` moves onto clear floor; a hint that settles nowhere is an error, never a toy left out (a switch names lamps by index). [building](docs/building.md#toys)
 - Keep `HALF_HEIGHT` in step with game-playground's prop catalogue. [building](docs/building.md#props-and-wires)
 - Declare what is meant to be unreached (crane jibs, shelves, container tops, lake beds) rather than let the survey fail on it. [building](docs/building.md#checking-a-map)
 - A survey slot between tilted boxes may be the AABB reading; check before believing it. [history](docs/history.md#the-bowls-sixteen-slots-that-were-not-there)
