@@ -15,6 +15,12 @@ Custom sandbox maps for [game-playground](../game-playground), as JSON documents
 - `maps/pgc_obstacle.json` — **Obstacle Park**: steps, stepping stones, a beam over a splash pool and a climb to a gate on a button, then a spiral of ledges up a tower whose button opens a vault.
 - `maps/pgc_nature.json` — **Nature**: a meadow with a snow field and an ice rink, a mud pit, a sand beach and a pond, a lava pit with a rock bridge, a frozen lake under thin ice with a diving board, a slime swamp, bushes to hide in, trampolines and a glass greenhouse.
 
+- `maps/pgc_construct_small.json` — **Construct Small**: a concrete yard with a deep water basin, a long brick-walled lane and a grass field behind, ringed by tall plaster walls. Converted from gm_construct_small by Wylie (https://gamebanana.com/mods/60385).
+
+## Credits
+
+`pgc_construct_small` is a community map converted with the author's credit (Wylie); the document carries an `attribution` field. Only the geometry is converted: the authors' textures are not carried, and surfaces use this game's materials over Kenney's Prototype Textures (CC0). A map is removed on the author's request. `tools/import_bsp.py` is the converter (`python3 -I tools/import_bsp.py <map.bsp> <config>`).
+
 The game picks these up through a link (`game-playground/maps/custom`, made by dot-bootstrap) or, delivered, as a pack the game names under `dependencies`. Edit `tools/build_maps.py` and run it to change a map; the format is described in game-playground's `maps/pg_data.gd`.
 
 MIT licensed.

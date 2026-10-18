@@ -1,0 +1,828 @@
+{
+ "format": 1,
+ "kind": "playground_map",
+ "id": "pgc_construct_small",
+ "name": "Construct Small",
+ "blurb": "A pool pit and a brick plant house under open sky: a concrete yard with a deep water basin, a long brick-walled lane and a grass field behind, ringed by tall plaster walls.",
+ "map_kind": "sandbox",
+ "tier": 1,
+ "author": "Wylie",
+ "attribution": "Geometry converted from gm_construct_small, https://gamebanana.com/mods/60385 by Wylie. The author's textures are not carried: surfaces use this game's materials over Kenney's Prototype Textures (CC0). Removed on request.",
+ "spawn": [
+  -0.743,
+  1.0,
+  7.849
+ ],
+ "spawn_yaw": 0.5,
+ "boxes": [
+  {
+   "at": [
+    -28.65,
+    -4.875,
+    9.14
+   ],
+   "size": [
+    1.22,
+    9.75,
+    1.22
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -28.65,
+    -4.875,
+    -38.405
+   ],
+   "size": [
+    1.22,
+    9.75,
+    1.21
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -28.65,
+    -4.875,
+    -14.635
+   ],
+   "size": [
+    1.22,
+    9.75,
+    46.33
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -4.875,
+    -4.875,
+    9.14
+   ],
+   "size": [
+    9.75,
+    9.75,
+    1.22
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -4.875,
+    -4.875,
+    -38.405
+   ],
+   "size": [
+    9.75,
+    9.75,
+    1.21
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -4.875,
+    -4.875,
+    -14.635
+   ],
+   "size": [
+    9.75,
+    9.75,
+    46.33
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -18.895,
+    -4.875,
+    -38.405
+   ],
+   "size": [
+    18.29,
+    9.75,
+    1.21
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    14.63,
+    -4.875,
+    9.14
+   ],
+   "size": [
+    29.26,
+    9.75,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#a9aaae"
+  },
+  {
+   "at": [
+    14.63,
+    -4.875,
+    -38.405
+   ],
+   "size": [
+    29.26,
+    9.75,
+    1.21
+   ],
+   "material": "concrete",
+   "colour": "#a9aaae"
+  },
+  {
+   "at": [
+    14.63,
+    -4.875,
+    -14.635
+   ],
+   "size": [
+    29.26,
+    9.75,
+    46.33
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -18.895,
+    -9.14,
+    -14.635
+   ],
+   "size": [
+    18.29,
+    1.22,
+    46.33
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -18.895,
+    -4.875,
+    9.14
+   ],
+   "size": [
+    18.29,
+    9.75,
+    1.22
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -17.415,
+    -4.875,
+    6.095
+   ],
+   "size": [
+    15.33,
+    9.75,
+    4.87
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -17.415,
+    -4.875,
+    -35.36
+   ],
+   "size": [
+    15.33,
+    9.75,
+    4.88
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    14.63,
+    13.43,
+    -34.14
+   ],
+   "size": [
+    29.26,
+    12.16,
+    9.76
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    14.63,
+    12.195,
+    4.875
+   ],
+   "size": [
+    29.26,
+    14.63,
+    9.75
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    14.63,
+    13.41,
+    -0.61
+   ],
+   "size": [
+    29.26,
+    12.2,
+    1.22
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    43.89,
+    -1.215,
+    -14.63
+   ],
+   "size": [
+    29.26,
+    17.07,
+    48.76
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    0.125,
+    8.615,
+    -15.24
+   ],
+   "size": [
+    0.25,
+    0.15,
+    28.04
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    0.125,
+    7.925,
+    -29.135
+   ],
+   "size": [
+    0.25,
+    1.21,
+    0.25
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    0.125,
+    7.925,
+    -1.345
+   ],
+   "size": [
+    0.25,
+    1.21,
+    0.25
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    0.125,
+    7.925,
+    -14.735
+   ],
+   "size": [
+    0.25,
+    1.21,
+    0.25
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    0.125,
+    6.1,
+    -15.24
+   ],
+   "size": [
+    0.25,
+    2.44,
+    28.04
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    14.63,
+    4.88,
+    4.265
+   ],
+   "size": [
+    29.26,
+    4.88,
+    10.97
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    14.63,
+    1.22,
+    4.265
+   ],
+   "size": [
+    29.26,
+    2.44,
+    10.97
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    -15.24,
+    -3.655,
+    10.36
+   ],
+   "size": [
+    30.48,
+    12.19,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    29.87,
+    -3.655,
+    10.36
+   ],
+   "size": [
+    59.74,
+    12.19,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    -15.24,
+    16.08,
+    10.36
+   ],
+   "size": [
+    30.48,
+    27.28,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    29.87,
+    19.71,
+    10.36
+   ],
+   "size": [
+    59.74,
+    20.02,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    29.87,
+    6.07,
+    10.36
+   ],
+   "size": [
+    59.74,
+    7.26,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    -29.87,
+    -3.655,
+    -14.63
+   ],
+   "size": [
+    1.22,
+    12.19,
+    48.76
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    -29.87,
+    16.08,
+    -14.63
+   ],
+   "size": [
+    1.22,
+    27.28,
+    48.76
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    14.02,
+    -3.655,
+    -39.62
+   ],
+   "size": [
+    89.0,
+    12.19,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    -15.24,
+    16.08,
+    -39.62
+   ],
+   "size": [
+    30.48,
+    27.28,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    29.26,
+    6.085,
+    -39.62
+   ],
+   "size": [
+    58.52,
+    7.29,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    29.26,
+    19.725,
+    -39.62
+   ],
+   "size": [
+    58.52,
+    19.99,
+    1.22
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    59.13,
+    19.71,
+    -15.24
+   ],
+   "size": [
+    1.22,
+    20.02,
+    49.98
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    59.13,
+    -0.015,
+    -15.24
+   ],
+   "size": [
+    1.22,
+    19.47,
+    49.98
+   ],
+   "material": "concrete",
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    28.65,
+    1.22,
+    -14.63
+   ],
+   "size": [
+    1.22,
+    2.44,
+    29.26
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    28.65,
+    3.665,
+    -14.63
+   ],
+   "size": [
+    1.22,
+    2.43,
+    29.26
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    14.63,
+    1.22,
+    -34.14
+   ],
+   "size": [
+    29.26,
+    2.44,
+    9.76
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    14.63,
+    4.895,
+    -34.14
+   ],
+   "size": [
+    29.26,
+    4.91,
+    9.76
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    0.155,
+    4.81,
+    -15.24
+   ],
+   "size": [
+    0.61,
+    0.24,
+    28.04
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    0.155,
+    2.345,
+    -29.11
+   ],
+   "size": [
+    0.61,
+    4.69,
+    0.3
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    0.155,
+    2.345,
+    -1.37
+   ],
+   "size": [
+    0.61,
+    4.69,
+    0.3
+   ],
+   "material": "concrete",
+   "colour": "#8d8b86"
+  },
+  {
+   "at": [
+    3.325,
+    6.1,
+    -3.725
+   ],
+   "size": [
+    6.15,
+    2.44,
+    5.01
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    14.755,
+    6.1,
+    -15.25
+   ],
+   "size": [
+    29.01,
+    2.44,
+    18.04
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    20.107,
+    1.171,
+    -26.756
+   ],
+   "size": [
+    25.706,
+    10.331,
+    5.01
+   ],
+   "material": "concrete",
+   "turn": [
+    0,
+    0,
+    1,
+    26.74
+   ],
+   "colour": "#d9d2c3"
+  },
+  {
+   "at": [
+    22.037,
+    3.363,
+    -26.756
+   ],
+   "size": [
+    20.288,
+    8.153,
+    5.01
+   ],
+   "material": "grass",
+   "turn": [
+    0,
+    0,
+    1,
+    26.74
+   ]
+  },
+  {
+   "at": [
+    20.107,
+    1.171,
+    -3.724
+   ],
+   "size": [
+    25.706,
+    10.331,
+    5.01
+   ],
+   "material": "rock",
+   "turn": [
+    0,
+    0,
+    1,
+    26.74
+   ],
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    22.037,
+    3.363,
+    -3.724
+   ],
+   "size": [
+    20.288,
+    8.153,
+    5.01
+   ],
+   "material": "grass",
+   "turn": [
+    0,
+    0,
+    1,
+    26.74
+   ]
+  },
+  {
+   "at": [
+    3.245,
+    6.1,
+    -26.775
+   ],
+   "size": [
+    6.15,
+    2.44,
+    5.01
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    -18.895,
+    -4.73,
+    -14.635
+   ],
+   "size": [
+    18.29,
+    7.6,
+    46.33
+   ],
+   "material": "water"
+  },
+  {
+   "at": [
+    -16.601,
+    -7.853,
+    -28.0
+   ],
+   "size": [
+    19.244,
+    8.005,
+    4.0
+   ],
+   "material": "concrete",
+   "turn": [
+    0,
+    0,
+    1,
+    26.31
+   ],
+   "colour": "#b9b4aa"
+  }
+ ],
+ "declared": [
+  {
+   "min": [
+    -30.9,
+    18.9,
+    -39.1
+   ],
+   "max": [
+    29.7,
+    20.1,
+    10.0
+   ],
+   "why": "tops of the plaster walls"
+  },
+  {
+   "min": [
+    -0.5,
+    8.1,
+    -29.5
+   ],
+   "max": [
+    0.7,
+    9.3,
+    -1.0
+   ],
+   "why": "the rail along the lane"
+  },
+  {
+   "min": [
+    -31.0,
+    29.1,
+    -40.7
+   ],
+   "max": [
+    60.2,
+    30.3,
+    11.5
+   ],
+   "why": "the tops of the tall outer walls"
+  }
+ ]
+}

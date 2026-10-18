@@ -55,3 +55,7 @@ A 160 m field with a course from a pad: four 1 m steps, six 2 m stepping stones 
 ## `pgc_nature`: Nature
 
 The first map made of materials. A 220 m grass meadow with a snow field and a 30 x 20 m ice rink, a mud pit, a sand beach, a stone-rimmed pond entered over a 3 m landing on the rim with a ramp each side, a rock-rimmed lava pit with a rock bridge (its ramps flush with the bridge), three rubber trampolines, a rock outcrop with a wooden lookout, and a glass greenhouse. A frozen lake (water 1.6 m deep under thin ice in a 2 m stone basin, bed declared) with a diving board on a 5 m wooden tower whose 3 m drop goes through the ice; a slime swamp (a toxic pool in a 0.8 m rim, six stepping stones); foliage bushes to hide in. The pond's barrels and balls float at their waterline.
+
+## `pgc_construct_small`: a converted community map
+
+Converted from a community BSP file by `tools/import_bsp.py` (credit and removal-on-request in the document's `attribution`; the author's textures replaced by this game's materials over Kenney's CC0 Prototype Textures). Brushes become boxes (exact, turned, prism, or one tilted box per ramp); the water brush becomes a water volume. A 30 x 46 m concrete basin 8.5 m deep holds 7.6 m of water, and a ramp added in its north end, because a player thrown in could otherwise never leave it. The tall outer walls and a rail are declared. The two flat-plane maps first asked for were not converted: a plane is not a map.

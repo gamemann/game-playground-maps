@@ -30,3 +30,7 @@ Loose props put down on a water bed were thrown out by game-playground's buoyanc
 - Slide Hill's hill vanished into the plate in grass's own look; it is a lighter green, and a snow bank was added so the ice was not a pale square on the lawn.
 - Fling Bowl's crates disappeared on an orange pedestal and the floor disappeared against the white facets; the pedestal is red and the floor sand. Its ice chutes were first two facets made of ice, and the overlapping slabs inside them showed through; they are thin ice lanes laid on a facet.
 - Harbour's gallery barrels were on the side the camera stands on and were moved.
+
+## Converting community maps
+
+A ramp converted into a staircase of slabs read as a row of slots to the survey: every slab was 0.5 m from the one after next. One tilted box per ramp replaced it. Two more maps were converted and dropped: a very large indoor room (3500 boxes, rendered dark and read as a pale slab from outside) and a big sandbox town (survey: dozens of slots between stacked brushes, a dozen unreachable balconies and several sealed basins; making it pass was a rebuild, not a conversion). A map that is not good is not shipped just because it converts.

@@ -16,8 +16,9 @@ Read the family [CLAUDE.md](../../CLAUDE.md) and game-playground's [CLAUDE.md](.
 
 | Path | What |
 | --- | --- |
-| `maps/*.json` | the twelve documents (`pgc_*`), committed; linked into game-playground as `maps/custom` by dot-bootstrap |
+| `maps/*.json` | the thirteen documents (`pgc_*`), committed (twelve built by `build_maps.py`, one converted by `import_bsp.py`, which `--check` does not rewrite); linked into game-playground as `maps/custom` by dot-bootstrap |
 | `tools/build_maps.py` | writes every document; `--check` fails when a committed file differs |
+| `tools/import_bsp.py`, `tools/bsp_read.py` | converts a community BSP to a document: brushes to boxes, textures mapped by name to materials; the config table holds each map's credit and region |
 | `.github/workflows/` | `check.yml` (the builder's `--check`), `release.yml` (the pack, from a `v*` tag) |
 
 ## Running and testing
