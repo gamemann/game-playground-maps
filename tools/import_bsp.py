@@ -253,7 +253,7 @@ def material_for(cfg, names):
     if not real:
         return None
     pool = [n for n in real if not n.startswith("DEV/")] or real
-    best = classify(max(set(pool), key=pool.count))
+    best = classify(max(sorted(set(pool)), key=pool.count))  # sorted: a tie follows the name, not the hash seed
     for key, mat, col in cfg["textures"]:
         if key in best:
             return mat, col
