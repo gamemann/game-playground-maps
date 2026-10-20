@@ -59,3 +59,7 @@ The first map made of materials. A 220 m grass meadow with a snow field and a 30
 ## `pgc_construct_small`: a converted community map
 
 Converted from a community BSP file by `tools/import_bsp.py` (credit and removal-on-request in the document's `attribution`; the author's textures replaced by this game's materials over Kenney's CC0 Prototype Textures). Brushes become boxes (exact, turned, prism, or one tilted box per ramp); the water brush becomes a water volume. A 30 x 46 m concrete basin 8.5 m deep holds 7.6 m of water, and a ramp added in its north end, because a player thrown in could otherwise never leave it. The tall outer walls and a rail are declared. The two flat-plane maps first asked for were not converted: a plane is not a map.
+
+## `pgc_smallbase`: a converted community map
+
+Converted by `tools/import_bsp.py` from gm_smallbase (Rouglead, https://gamebanana.com/mods/60684; page checked, no statement against porting or sharing; the site's licence line is CC BY-NC-ND 4.0). A 24 m square: a grass floor inside a concrete ring, brick walls, a second storey round the yard reached by a 20-degree ramp that climbs out of a small pool. 23 boxes. Chosen after gm_construct_d14_cse_lakeside was tried and dropped: its pergolas and rim give nearly a thousand survey slots.

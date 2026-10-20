@@ -1,0 +1,347 @@
+{
+ "format": 1,
+ "kind": "playground_map",
+ "id": "pgc_smallbase",
+ "name": "Small Base",
+ "blurb": "A small, lag-free concrete base for building and wiring: a brick-walled yard with a second storey, a grass patch and a small pool.",
+ "map_kind": "sandbox",
+ "tier": 1,
+ "author": "Rouglead",
+ "attribution": "Geometry converted from gm_smallbase, https://gamebanana.com/mods/60684 by Rouglead. The author's textures are not carried: surfaces use this game's materials over Kenney's Prototype Textures (CC0). Removed on request.",
+ "spawn": [
+  -10.363,
+  1.0,
+  9.144
+ ],
+ "spawn_yaw": -90.0,
+ "boxes": [
+  {
+   "at": [
+    -10.97,
+    2.59,
+    0.0
+   ],
+   "size": [
+    2.44,
+    0.3,
+    24.38
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    10.97,
+    2.59,
+    0.0
+   ],
+   "size": [
+    2.44,
+    0.3,
+    24.38
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    0.0,
+    2.59,
+    -10.97
+   ],
+   "size": [
+    19.5,
+    0.3,
+    2.44
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    0.0,
+    2.59,
+    10.97
+   ],
+   "size": [
+    19.5,
+    0.3,
+    2.44
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    8.534,
+    0.035,
+    5.595
+   ],
+   "size": [
+    2.438,
+    2.854,
+    7.813
+   ],
+   "material": "concrete",
+   "turn": [
+    1,
+    0,
+    0,
+    -20.56
+   ]
+  },
+  {
+   "at": [
+    8.535,
+    -0.15,
+    1.22
+   ],
+   "size": [
+    2.43,
+    0.3,
+    2.44
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    8.4,
+    -0.61,
+    6.42
+   ],
+   "size": [
+    2.78,
+    0.92,
+    6.74
+   ],
+   "material": "water"
+  },
+  {
+   "at": [
+    6.71,
+    -0.61,
+    4.875
+   ],
+   "size": [
+    1.22,
+    1.22,
+    9.75
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    8.535,
+    -0.61,
+    2.895
+   ],
+   "size": [
+    2.43,
+    1.22,
+    0.91
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    -1.215,
+    -0.495,
+    0.0
+   ],
+   "size": [
+    17.07,
+    0.83,
+    19.5
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    8.535,
+    -0.495,
+    -3.2
+   ],
+   "size": [
+    2.43,
+    0.83,
+    13.1
+   ],
+   "material": "grass"
+  },
+  {
+   "at": [
+    -10.97,
+    -0.61,
+    0.0
+   ],
+   "size": [
+    2.44,
+    1.22,
+    24.38
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    10.97,
+    -0.61,
+    0.0
+   ],
+   "size": [
+    2.44,
+    1.22,
+    24.38
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    0.0,
+    -0.61,
+    -10.97
+   ],
+   "size": [
+    19.5,
+    1.22,
+    2.44
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    0.0,
+    -0.61,
+    10.97
+   ],
+   "size": [
+    19.5,
+    1.22,
+    2.44
+   ],
+   "material": "concrete"
+  },
+  {
+   "at": [
+    11.885,
+    1.22,
+    0.0
+   ],
+   "size": [
+    0.61,
+    2.44,
+    24.38
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    0.0,
+    1.22,
+    11.885
+   ],
+   "size": [
+    23.16,
+    2.44,
+    0.61
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    -11.885,
+    1.22,
+    0.0
+   ],
+   "size": [
+    0.61,
+    2.44,
+    24.38
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    0.0,
+    1.22,
+    -11.885
+   ],
+   "size": [
+    23.16,
+    2.44,
+    0.61
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    11.885,
+    3.96,
+    0.0
+   ],
+   "size": [
+    0.61,
+    2.44,
+    24.38
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    0.0,
+    3.96,
+    11.885
+   ],
+   "size": [
+    23.16,
+    2.44,
+    0.61
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    -11.885,
+    3.96,
+    0.0
+   ],
+   "size": [
+    0.61,
+    2.44,
+    24.38
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  },
+  {
+   "at": [
+    0.0,
+    3.96,
+    -11.885
+   ],
+   "size": [
+    23.16,
+    2.44,
+    0.61
+   ],
+   "material": "rock",
+   "colour": "#b0705a"
+  }
+ ],
+ "declared": [
+  {
+   "min": [
+    -12.4,
+    5.0,
+    -12.4
+   ],
+   "max": [
+    12.4,
+    5.4,
+    12.4
+   ],
+   "why": "tops of the upper brick walls"
+  }
+ ]
+}

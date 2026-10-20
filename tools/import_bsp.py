@@ -221,6 +221,25 @@ CONFIGS = {
         ],
         "default": ("concrete", None),
     },
+    "smallbase": {
+        "id": "pgc_smallbase",
+        "name": "Small Base",
+        "blurb": "A small, lag-free concrete base for building and wiring: a brick-walled yard with a second storey, a grass patch and a small pool.",
+        "author": "Rouglead",
+        "source": "gm_smallbase, https://gamebanana.com/mods/60684",
+        "spawn_at": 0,
+        # The tops of the brick walls, which no player is meant to stand on.
+        "declared": [
+            {"min": [-12.4, 5.0, -12.4], "max": [12.4, 5.4, 12.4], "why": "tops of the upper brick walls"},
+        ],
+        "textures": [
+            ("WATER", "water", None),
+            ("GRASS", "grass", None),
+            ("BRICK", "rock", "#b0705a"),
+            ("CONCRETE", "concrete", None),
+        ],
+        "default": ("concrete", None),
+    },
 }
 
 WATER = 0x20
@@ -274,7 +293,8 @@ def snap(b, grid=0.01):
 def build(bsp_path, name):
     cfg = CONFIGS[name]
     bsp = bsp_read.Bsp(bsp_path).load()
-    starts = [e for e in bsp.entities if e.get("classname") == "info_player_start"]
+    # Garry's Mod maps use gmod_player_start where the others use info_player_start.
+    starts = [e for e in bsp.entities if e.get("classname") in ("info_player_start", "gmod_player_start")]
     sp = [float(v) for v in starts[cfg["spawn_at"]]["origin"].split()]
     sp_yaw = float(starts[cfg["spawn_at"]].get("angles", "0 0 0").split()[1])
     y_off = (sp[2] - 1.0) * S
