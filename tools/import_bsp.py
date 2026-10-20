@@ -4,9 +4,9 @@
     tools/import_bsp.py <map.bsp> <config-name> [--out=maps/<id>.json]
 
 `CONFIGS` below says, per map, its id, name, author, page, how its author's textures become the
-game's materials, where the spawn is and what is dropped. The geometry helpers are copied from
-mg-prop-hunt-maps' tools/import_bsp.py (which owns them; a fix there is worth copying here), and
-bsp_read.py is that repository's too.
+game's materials, where the spawn is and what is dropped. The geometry helpers are still a copy of
+mg-prop-hunt-maps' tools/import_bsp.py; they move to dot-map's shared converter (dotbsp.boxes)
+under nightly dot-map-bsp-import-1. The reader, bsp_read.py, is already dot-map's shared one.
 
 What it does, and why each choice:
 
