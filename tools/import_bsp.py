@@ -4,9 +4,11 @@
     tools/import_bsp.py <map.bsp> <config-name> [--out=maps/<id>.json]
 
 `CONFIGS` below says, per map, its id, name, author, page, how its author's textures become the
-game's materials, where the spawn is and what is dropped. The geometry helpers are still a copy of
-mg-prop-hunt-maps' tools/import_bsp.py; they move to dot-map's shared converter (dotbsp.boxes)
-under nightly dot-map-bsp-import-1. The reader, bsp_read.py, is already dot-map's shared one.
+game's materials, where the spawn is and what is dropped. The reader (bsp_read.py) and the material
+naming and majority pick (dotbsp.docboxes) are dot-map's shared ones. The box helpers below stay
+local on purpose: dotbsp.boxes.decompose(tilt=True) cuts a slope along the slope's own axis and
+spans each slab's cross-section, where these cut along the longer axis across the bounding box,
+so it would change the committed boxes (a re-import of every map must stay byte-identical).
 
 What it does, and why each choice:
 
@@ -26,40 +28,16 @@ What it does, and why each choice:
 import json
 import math
 import os
-import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import bsp_read  # noqa: E402
+import bsp_read  # noqa: E402  (also puts dot-map's tools/bsp on sys.path)
+from dotbsp import docboxes  # noqa: E402  (the passes the map repositories share)
 
 S = 0.01905
 SLAB = 28.0     # source units: ~0.53 m, a slope's riser
 MIN_SIDE = 0.04  # metres: a brush thinner than this in every direction is a bevel sliver, not a wall
-
-
-def classify(name):
-    """A Source material name without its per-map folder and cubemap suffix. vbsp renames a
-    material the map patches to MAPS/<map>/<group>/<name>_<x>_<y>_<z>, and the folder carries
-    the map's own name, which must not decide a surface (a map called ph_school would match
-    SCHOOL-anything); only the material's own name does."""
-    n = name.upper()
-    if n.startswith("MAPS/"):
-        n = n.split("/", 2)[-1]
-    return re.sub(r"(_-?\d+){3}$", "", n)
-
-
-def brush_material(bsp, index):
-    first, count, _ = bsp.brushes[index]
-    names = []
-    for s in bsp.brushsides[first:first + count]:
-        if s[3] or s[1] < 0:
-            continue
-        ti = bsp.texinfo[s[1]]
-        td = int(ti[17])
-        if 0 <= td < len(bsp.texdata):
-            names.append(bsp.texnames[bsp.texdata[td][3]].upper())
-    return names
 
 
 def planes_of(bsp, index):
@@ -249,15 +227,8 @@ WATER = 0x20
 
 
 def material_for(cfg, names):
-    real = [n for n in names if not n.startswith("TOOLS/")]
-    if not real:
-        return None
-    pool = [n for n in real if not n.startswith("DEV/")] or real
-    best = classify(max(sorted(set(pool)), key=pool.count))  # sorted: a tie follows the name, not the hash seed
-    for key, mat, col in cfg["textures"]:
-        if key in best:
-            return mat, col
-    return cfg["default"]
+    # The majority pick (sorted, so a tie follows the name, not the hash seed) is dot-map's.
+    return docboxes.majority_material(names, cfg["textures"], cfg["default"])
 
 
 def ramp_document_box(rb, mat, colour, y_off):
@@ -310,7 +281,7 @@ def build(bsp_path, name):
     boxes, slabbed, dropped = [], 0, 0
     for i in sorted(bsp.model_brushes(0)):
         contents = bsp.brushes[i][2]
-        names = brush_material(bsp, i)
+        names = docboxes.brush_material_names(bsp, i)
         pick = ("water", None) if contents & WATER else material_for(cfg, names)
         if pick is None:
             dropped += 1
