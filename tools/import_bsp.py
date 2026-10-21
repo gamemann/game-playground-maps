@@ -19,8 +19,10 @@ What it does, and why each choice:
   horizontal axis, each as tall as the brush is at the slab's middle, so a ramp becomes a flight
   of 0.5 m risers, which a player climbs (the game's climb limit is 1.035 m).
 - Axes: Source is Z-up, godot is (x, z, -y). Scale: 1 unit = 0.01905 m, the family's.
-- Textures are NOT carried. The author's textures are replaced by the game's materials by name
-  (CONFIGS[...]["textures"]), drawn over Kenney's CC0 Prototype Textures grid like every other map.
+- Textures are NOT carried. A brush's surface comes from dot-map's shared list
+  (tools/bsp/dotbsp/source_textures.tsv, a new texture goes there and `bsp.py unmapped <bsp>` lists
+  what it misses); GAME_MATERIAL turns the list's generic ids into this game's materials and
+  tints, drawn over Kenney's CC0 Prototype Textures grid like every other map.
 - Tool brushes (skybox, clip, trigger, hint, nodraw-only) are dropped. A water brush becomes a
   water volume. Displacements are not carried (a document has no meshes); the brush under one is.
 - The ground is shifted so the spawn's floor is y = 0.
@@ -33,7 +35,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bsp_read  # noqa: E402  (also puts dot-map's tools/bsp on sys.path)
-from dotbsp import docboxes  # noqa: E402  (the passes the map repositories share)
+from dotbsp import docboxes, texturemap  # noqa: E402  (the passes and the texture list the map repositories share)
 
 S = 0.01905
 SLAB = 28.0     # source units: ~0.53 m, a slope's riser
@@ -191,8 +193,22 @@ def brush_boxes(bsp, index, slab=None):
     return out, 1
 
 
-# Per map. "textures" is (substring of the classified texture name, material, colour or None),
-# first match wins; the material is one of the game's, so the look is Kenney's grid under a tint.
+# What the shared list's generic ids become here: (this game's material, colour or None). The game has no
+# brick, plaster, tile or ceiling material (its surfaces are physical: concrete, rock, wood...), so the look
+# is Kenney's grid under a tint, the tints the maps carried before the list (a brick wall is rock under
+# #b0705a). The list's own tints are not used: they say what the mapper meant, these say what reads here.
+# Anything not named is already one of the game's ids (concrete, metal, glass, grass, water) and passes through.
+GAME_MATERIAL = {
+    "brick_red": ("rock", "#b0705a"), "stone_wall": ("rock", None),
+    "plaster_painted": ("concrete", "#d9d2c3"), "plaster_worn": ("concrete", "#d9d2c3"), "wallpaper": ("concrete", "#d9d2c3"),
+    "ceiling": ("concrete", "#8d8b86"),
+    "wood_planks": ("wood", None), "door_wood": ("wood", None), "wood_floor": ("wood", None), "parquet": ("wood", None),
+    "roof_tiles": ("concrete", None), "tile_floor": ("concrete", None), "carpet": ("concrete", None), "flat": ("concrete", None),
+    "mud": ("mud", None), "snow": ("snow", None),
+}
+
+# Per map. "overrides" is (substring of the classified texture name, material, colour or None), first match
+# wins and is tried before the shared list: only what the list cannot say, and each entry needs a reason.
 CONFIGS = {
     "construct_small": {
         "id": "pgc_construct_small",
@@ -210,16 +226,10 @@ CONFIGS = {
             {"min": [-0.5, 8.1, -29.5], "max": [0.7, 9.3, -1.0], "why": "the rail along the lane"},
             {"min": [-31.0, 29.1, -40.7], "max": [60.2, 30.3, 11.5], "why": "the tops of the tall outer walls"},
         ],
-        "textures": [
-            ("WATER", "water", None),
-            ("FLATGRASS", "grass", None),
-            ("BRICK", "rock", "#b0705a"),
-            ("PLASTER", "concrete", "#d9d2c3"),
-            ("CONCRETECEILING", "concrete", "#8d8b86"),
-            ("CONCRETE", "concrete", None),
-            ("REFLECTIVITY", "concrete", "#a9aaae"),
-        ],
-        "default": ("concrete", None),
+        # The list maps REFLECTIVITY (a developer pattern) to nothing a player reads; this map's grey
+        # panels are drawn as a cool concrete. The source BSP is no longer on disk, so this entry
+        # could not be re-checked against a re-import.
+        "overrides": [("REFLECTIVITY", "concrete", "#a9aaae")],
     },
     "smallbase": {
         "id": "pgc_smallbase",
@@ -232,22 +242,26 @@ CONFIGS = {
         "declared": [
             {"min": [-12.4, 5.0, -12.4], "max": [12.4, 5.4, 12.4], "why": "tops of the upper brick walls"},
         ],
-        "textures": [
-            ("WATER", "water", None),
-            ("GRASS", "grass", None),
-            ("BRICK", "rock", "#b0705a"),
-            ("CONCRETE", "concrete", None),
-        ],
-        "default": ("concrete", None),
     },
 }
 
 WATER = 0x20
 
 
+TEXTURE_MAP = texturemap.load()
+
+
 def material_for(cfg, names):
-    # The majority pick (sorted, so a tie follows the name, not the hash seed) is dot-map's.
-    return docboxes.majority_material(names, cfg["textures"], cfg["default"])
+    # The majority pick (sorted, so a tie follows the name, not the hash seed) is dot-map's. The map's own
+    # overrides are tried first; then the shared list, whose generic id the game turns into its own.
+    pick = docboxes.majority_material(names, cfg.get("overrides", []), None)
+    if pick is not None or not [n for n in names if not n.startswith("TOOLS/")]:
+        return pick
+    hit = docboxes.majority_material(names, TEXTURE_MAP, ("", None))
+    if not hit[0]:
+        return ("concrete", None)             # a texture the list does not map, or maps to nothing
+    mat, colour = GAME_MATERIAL.get(hit[0], (hit[0], None))
+    return (mat, colour)
 
 
 def ramp_document_box(rb, mat, colour, y_off):
