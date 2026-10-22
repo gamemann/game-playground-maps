@@ -5,10 +5,9 @@
 
 `CONFIGS` below says, per map, its id, name, author, page, how its author's textures become the
 game's materials, where the spawn is and what is dropped. The reader (bsp_read.py) and the material
-naming and majority pick (dotbsp.docboxes) are dot-map's shared ones. The box helpers below stay
-local on purpose: dotbsp.boxes.decompose(tilt=True) cuts a slope along the slope's own axis and
-spans each slab's cross-section, where these cut along the longer axis across the bounding box,
-so it would change the committed boxes (a re-import of every map must stay byte-identical).
+naming and majority pick (dotbsp.docboxes) and the brush-to-box cutting (dotbsp.boxes.decompose with
+tilt=True) are dot-map's shared ones; this file keeps only the document format, the GAME_MATERIAL table
+and the per-map configs. Re-importing gm_smallbase gives a byte-identical document.
 
 What it does, and why each choice:
 
@@ -35,162 +34,26 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bsp_read  # noqa: E402  (also puts dot-map's tools/bsp on sys.path)
-from dotbsp import docboxes, texturemap  # noqa: E402  (the passes and the texture list the map repositories share)
+from dotbsp import boxes as boxes_lib, docboxes, texturemap  # noqa: E402  (the passes and the texture list the map repositories share)
 
 S = 0.01905
 SLAB = 28.0     # source units: ~0.53 m, a slope's riser
 MIN_SIDE = 0.04  # metres: a brush thinner than this in every direction is a bevel sliver, not a wall
 
 
-def planes_of(bsp, index):
-    first, count, _ = bsp.brushes[index]
-    return [bsp.planes[s[0]][:4] for s in bsp.brushsides[first:first + count] if not s[3]]
-
-
-def z_range(planes, x, y):
-    lo, hi = -1e9, 1e9
-    for nx, ny, nz, d in planes:
-        if abs(nz) < 1e-6:
-            continue
-        z = (d - nx * x - ny * y) / nz
-        if nz > 0:
-            hi = min(hi, z)
-        else:
-            lo = max(lo, z)
-    return lo, hi
-
-
-def box_in_frame(pts, phi, tol):
-    """The hull's extents in a frame turned phi degrees about z, or None when some corner is not
-    a corner of that bounding box. (x0, x1), (y0, y1), (z0, z1), in the turned frame."""
-    c, sn = math.cos(math.radians(phi)), math.sin(math.radians(phi))
-    q = [(p[0] * c + p[1] * sn, -p[0] * sn + p[1] * c, p[2]) for p in pts]
-    x0, x1 = min(p[0] for p in q), max(p[0] for p in q)
-    y0, y1 = min(p[1] for p in q), max(p[1] for p in q)
-    z0, z1 = min(p[2] for p in q), max(p[2] for p in q)
-    for p in q:
-        if not ((abs(p[0] - x0) < tol or abs(p[0] - x1) < tol) and (abs(p[1] - y0) < tol or abs(p[1] - y1) < tol)
-                and (abs(p[2] - z0) < tol or abs(p[2] - z1) < tol)):
-            return None
-    return (x0, x1), (y0, y1), (z0, z1)
-
-
-def turned_box(bsp, index, pts):
-    """(box, phi) when the brush is a box turned about the vertical axis, else None. The author's
-    building is not always on the grid (a room at thirty degrees to the rest), and cutting such a
-    wall into axis-aligned slabs gives a saw-tooth the players catch on. The angle is each upright
-    side's direction modulo 90, tried in turn; the document's boxes carry a yaw."""
-    first, count, _ = bsp.brushes[index]
-    tried = set()
-    for sd in bsp.brushsides[first:first + count]:
-        if sd[3]:
-            continue
-        nx, ny, nz, _d = bsp.planes[sd[0]][:4]
-        if abs(nz) > 1e-4:
-            continue
-        phi = round(math.degrees(math.atan2(ny, nx)) % 90.0, 2)
-        if phi in tried or phi < 0.05 or phi > 89.95:
-            continue
-        tried.add(phi)
-        # Four-decimal planes at 1000 units leave a unit of slack in the corners.
-        box = box_in_frame(pts, phi, 1.5)
-        if box is not None:
-            return box, phi
-    return None
-
-
-def prism_box(pts):
-    """(box, phi) for a brush that is a vertical prism of any plan shape: the smallest turned
-    rectangle round its plan. A curved wall is a run of such wedges and a column of a round room
-    is one; the box overhangs the wedge by a sliver, where cutting it into axis-aligned slabs (a
-    slope's treatment, wrong for a plan shape) bit chunks out of the room. None for a brush whose
-    top or bottom is not flat and level."""
-    zs = sorted({round(p[2], 1) for p in pts})
-    if len(zs) != 2:
-        return None
-    low = {(round(p[0], 1), round(p[1], 1)) for p in pts if abs(p[2] - zs[0]) < 0.15}
-    high = {(round(p[0], 1), round(p[1], 1)) for p in pts if abs(p[2] - zs[1]) < 0.15}
-    if low != high or len(low) < 3:
-        return None
-    plan = [(x, y, zs[0]) for x, y in low]
-    best = None
-    for (ax, ay), (bx_, by) in ((p, q) for p in low for q in low if p != q):
-        phi = math.degrees(math.atan2(by - ay, bx_ - ax)) % 90.0
-        box = box_in_frame(plan, phi, 1e9)
-        area = (box[0][1] - box[0][0]) * (box[1][1] - box[1][0])
-        if best is None or area < best[0] - 1e-6:
-            best = (area, phi, box)
-    _a, phi, box = best
-    return (box[0], box[1], (zs[0], zs[1])), phi
-
-
-def ramp_box(bsp, index, pts):
-    """A tilted box for a wedge whose only sloping face is a plane rising along one world axis:
-    (x0, x1, y0, y1, zlow, zhigh, base, angle in degrees, axis 'x' or 'y', sign), else None. One
-    tilted box is the ramp's surface exactly; the staircase of slabs it replaces left a 0.5 m gap
-    between every slab and the one after next, which the survey reads as a row of slots, and a
-    player's feet catch on its saw-tooth. The box hangs under the surface, so the sliver it
-    overhangs past the high end is inside the wall the ramp meets."""
-    sloped = [p for p in planes_of(bsp, index) if 0.05 < p[2] < 0.98]
-    if len(sloped) != 1:
-        return None
-    nx, ny, nz, d = sloped[0]
-    if (abs(nx) > 1e-3) == (abs(ny) > 1e-3):
-        return None
-    x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts)
-    y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
-    base = min(p[2] for p in pts)
-    along_x = abs(nx) > 1e-3
-    g = -(nx if along_x else ny) / nz
-    if along_x:
-        za, zb = (d - nx * x0) / nz, (d - nx * x1) / nz
-    else:
-        za, zb = (d - ny * y0) / nz, (d - ny * y1) / nz
-    return (x0, x1, y0, y1, za, zb, base, math.degrees(math.atan(abs(g))), "x" if along_x else "y", 1 if g > 0 else -1)
-
-
 def brush_boxes(bsp, index, slab=None):
-    """[((x range), (y range), (z range), phi)] in Source units, the ranges in a frame turned phi
-    degrees (0 for most), and whether the brush had to be cut into slabs."""
-    pts = bsp.brush_hull(index)
-    if len(pts) < 4:
+    """dot-map's boxes.decompose for one brush: ([(u range), (v range), (z range), phi], cut), cut 0 for a
+    box, 1 for slabs and 2 for a tilted ramp, whose box is then boxes.decompose's own ramp tuple."""
+    planes = [bsp.planes[s[0]][:4] for s in bsp.brushsides[bsp.brushes[index][0]:][:bsp.brushes[index][1]] if not s[3]]
+    parts = boxes_lib.decompose(planes, bsp.brush_hull(index), slab=slab or SLAB, tilt=True)
+    if not parts:
         return [], 0
-    x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts)
-    y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
-    z0, z1 = min(p[2] for p in pts), max(p[2] for p in pts)
-    box_vol = (x1 - x0) * (y1 - y0) * (z1 - z0)
-    # Hull volume from the corner points: a brush is a box when every corner is a box corner.
-    corners = sum(1 for p in pts if (abs(p[0] - x0) < 0.5 or abs(p[0] - x1) < 0.5) and (abs(p[1] - y0) < 0.5 or abs(p[1] - y1) < 0.5) and (abs(p[2] - z0) < 0.5 or abs(p[2] - z1) < 0.5))
-    if corners == len(pts):
-        return [((x0, x1), (y0, y1), (z0, z1), 0.0)], 0
-    tb = turned_box(bsp, index, pts)
-    if tb is not None:
-        return [tb[0] + (tb[1],)], 0
-    pb = prism_box(pts)
-    if pb is not None:
-        return [pb[0] + (pb[1],)], 0
-    rb = ramp_box(bsp, index, pts)
-    if rb is not None:
-        return [rb], 2
-    pl = planes_of(bsp, index)
-    out = []
-    if x1 - x0 >= y1 - y0:
-        n = max(1, math.ceil((x1 - x0) / (slab or SLAB)))
-        for i in range(n):
-            a, b = x0 + (x1 - x0) * i / n, x0 + (x1 - x0) * (i + 1) / n
-            lo, hi = z_range(pl, (a + b) / 2, (y0 + y1) / 2)
-            lo, hi = max(lo, z0), min(hi, z1)
-            if hi - lo > 0.5:
-                out.append(((a, b), (y0, y1), (lo, hi), 0.0))
-    else:
-        n = max(1, math.ceil((y1 - y0) / (slab or SLAB)))
-        for i in range(n):
-            a, b = y0 + (y1 - y0) * i / n, y0 + (y1 - y0) * (i + 1) / n
-            lo, hi = z_range(pl, (x0 + x1) / 2, (a + b) / 2)
-            lo, hi = max(lo, z0), min(hi, z1)
-            if hi - lo > 0.5:
-                out.append(((x0, x1), (a, b), (lo, hi), 0.0))
-    return out, 1
+    if parts[0]["kind"] == "ramp":
+        (x0, x1), (y0, y1), _z = parts[0]["x"], parts[0]["y"], parts[0]["z"]
+        axis, zlow, zhigh, base, ang, sign = parts[0]["ramp"]
+        return [(x0, x1, y0, y1, zlow, zhigh, base, ang, axis, sign)], 2
+    out = [(p["x"], p["y"], p["z"], p["phi"]) for p in parts]
+    return out, 1 if parts[0]["kind"] == "slab" else 0
 
 
 # What the shared list's generic ids become here: (this game's material, colour or None). The game has no
