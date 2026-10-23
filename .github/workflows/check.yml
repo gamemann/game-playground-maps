@@ -16,8 +16,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - uses: actions/checkout@v4
+              with:
+                  repository: modcommunity/dot-map
+                  path: dot-map-src
             - uses: actions/setup-python@v5
               with:
                   python-version: '3.12'
             - run: python3 tools/build_maps.py --check
             - run: python3 tools/build_provides.py --check
+              env:
+                  DOTMAP_PATH: dot-map-src
