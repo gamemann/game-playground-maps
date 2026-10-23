@@ -20,3 +20,4 @@ jobs:
               with:
                   python-version: '3.12'
             - run: python3 tools/build_maps.py --check
+            - run: python3 tools/build_provides.py --check

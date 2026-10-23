@@ -1,0 +1,110 @@
+{
+    "schema": 1,
+    "title": "Playground maps",
+    "kinds": [
+        "map"
+    ],
+    "games": [
+        "gamemann/game-playground"
+    ],
+    "entries": [
+        {
+            "kind": "map",
+            "id": "pgc_bowl",
+            "name": "Fling Bowl",
+            "scene": "maps/pgc_bowl.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_canyon",
+            "name": "Canyon",
+            "scene": "maps/pgc_canyon.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_construct_small",
+            "name": "Construct Small",
+            "scene": "maps/pgc_construct_small.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_harbour",
+            "name": "Harbour",
+            "scene": "maps/pgc_harbour.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_islands",
+            "name": "Sky Islands",
+            "scene": "maps/pgc_islands.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_nature",
+            "name": "Nature",
+            "scene": "maps/pgc_nature.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_obstacle",
+            "name": "Obstacle Park",
+            "scene": "maps/pgc_obstacle.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_plots",
+            "name": "Build Plots",
+            "scene": "maps/pgc_plots.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_quarry",
+            "name": "Quarry",
+            "scene": "maps/pgc_quarry.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_site",
+            "name": "Construction Site",
+            "scene": "maps/pgc_site.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_slopes",
+            "name": "Slide Hill",
+            "scene": "maps/pgc_slopes.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_smallbase",
+            "name": "Small Base",
+            "scene": "maps/pgc_smallbase.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_town",
+            "name": "Town",
+            "scene": "maps/pgc_town.json",
+            "map_kind": "sandbox"
+        },
+        {
+            "kind": "map",
+            "id": "pgc_warehouse",
+            "name": "Warehouse",
+            "scene": "maps/pgc_warehouse.json",
+            "map_kind": "sandbox"
+        }
+    ]
+}
