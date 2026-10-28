@@ -15,6 +15,7 @@ dropped vertically instead leaves a lip at the top, which over a step's height i
 import json
 import math
 import pathlib
+import os
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -1844,12 +1845,56 @@ TOYS = {
     ],
 }
 
+# Each map's `ambient` block for DotAmbienceDirector: bed level (1.0 is the stock 0.35 bed) and whether
+# the birdsong bed may play. Interiors sit under 1, open ground over; only parks, woods and gardens
+# are lively. Maps that arrive from tools/import_bsp.py are patched by `--ambient`.
+AMBIENT = {
+    "pgc_plots": (1.2, False),
+    "pgc_quarry": (1.0, False),
+    "pgc_slopes": (1.2, True),
+    "pgc_town": (1.3, False),
+    "pgc_islands": (1.3, True),
+    "pgc_site": (1.0, False),
+    "pgc_warehouse": (0.7, False),
+    "pgc_canyon": (1.0, False),
+    "pgc_harbour": (1.3, False),
+    "pgc_bowl": (1.0, False),
+    "pgc_obstacle": (1.0, False),
+    "pgc_nature": (1.5, True),
+    "pgc_construct_small": (1.0, False),
+    "pgc_smallbase": (0.8, False),
+}
+
+
+def ambient_block(mid):
+    level, lively = AMBIENT[mid]
+    block = {"level": level}
+    if lively:
+        block["lively"] = True
+    return block
+
+
+def patch_ambient():
+    """Adds the block to every document in maps/, imported ones included, without touching its layout."""
+    for mid in AMBIENT:
+        path = os.path.join(ROOT, "maps", mid + ".json")
+        with open(path) as f:
+            doc = json.load(f)
+        doc["ambient"] = ambient_block(mid)
+        with open(path, "w") as f:
+            f.write(json.dumps(doc, indent=1) + "\n")
+
+
 
 def main():
+    if "--ambient" in sys.argv:
+        patch_ambient()
+        sys.exit(0)
     check = "--check" in sys.argv
     MAPS.mkdir(exist_ok=True)
     bad = 0
     for d in (plots(), quarry(), slopes(), town(), islands(), site(), warehouse(), canyon(), harbour(), bowl(), obstacle(), nature()):
+        d["ambient"] = ambient_block(d["id"])
         hints = TOYS.get(d["id"], [])
         if hints:
             d["toys"] = settle(d, hints)

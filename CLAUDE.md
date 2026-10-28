@@ -43,3 +43,7 @@ Read the family [CLAUDE.md](../../CLAUDE.md) and game-playground's [CLAUDE.md](.
 - `project.godot` exists only so dot-ci's release can import this repository and attach the `-pack.zip`; it carries the editor's own header and no comments, because the editor rewrites the file on its first save and a checkout would show it modified.
 
 **`provides.json` is what lists this pack in the Workshop, and `tools/build_provides.py` writes it** from the documents in the folder (an entry per map, `map_kind` and the game it is for are constants at the top). Edit the script, run it, commit both; `--check` (CI) fails on a stale file. A pack whose newest READY version has no `provides` block is not a Workshop item. It ships because the pack takes every file outside the excluded folders.
+
+## Ambience level
+
+Every document carries `"ambient": {"level": n, "lively": true}` for dot-audio's `DotAmbienceDirector` (`level` multiplies the stock bed, 1.0 unchanged; `lively` lets the birdsong bed play): the warehouse and small base under 1, towns and harbours over, and `lively` only on the nature, slopes and islands maps. The table is `AMBIENT` in `tools/build_maps.py`, which writes it into built documents; `tools/build_maps.py --ambient` patches the imported ones, so a new map adds a row there.

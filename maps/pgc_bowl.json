@@ -2164,6 +2164,9 @@
    "frozen": false
   }
  ],
+ "ambient": {
+  "level": 1.0
+ },
  "toys": [
   {
    "toy": "bowling_ball",

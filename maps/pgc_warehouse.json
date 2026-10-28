@@ -4018,6 +4018,9 @@
    "in": "toggle"
   }
  ],
+ "ambient": {
+  "level": 0.7
+ },
  "toys": [
   {
    "toy": "bowling_ball",

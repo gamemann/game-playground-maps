@@ -1002,6 +1002,9 @@
    "in": "toggle"
   }
  ],
+ "ambient": {
+  "level": 1.0
+ },
  "toys": [
   {
    "toy": "tyre",

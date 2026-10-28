@@ -1076,6 +1076,9 @@
    "frozen": false
   }
  ],
+ "ambient": {
+  "level": 1.2
+ },
  "toys": [
   {
    "toy": "beach_ball",

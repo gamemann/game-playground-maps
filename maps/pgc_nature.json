@@ -1592,6 +1592,10 @@
    "frozen": false
   }
  ],
+ "ambient": {
+  "level": 1.5,
+  "lively": true
+ },
  "toys": [
   {
    "toy": "swing",

@@ -343,5 +343,8 @@
    ],
    "why": "tops of the upper brick walls"
   }
- ]
+ ],
+ "ambient": {
+  "level": 0.8
+ }
 }

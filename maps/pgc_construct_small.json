@@ -824,5 +824,8 @@
    ],
    "why": "the tops of the tall outer walls"
   }
- ]
+ ],
+ "ambient": {
+  "level": 1.0
+ }
 }
