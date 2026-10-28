@@ -1,0 +1,33 @@
+[
+  {
+    "paths": [
+      ""
+    ],
+    "licence": "MIT",
+    "author": "TMC",
+    "url": "https://github.com/zees-games/game-playground-maps",
+    "title": "game-playground-maps (original content)"
+  },
+  {
+    "paths": [
+      "maps/pgc_construct_small.json"
+    ],
+    "licence": "CC-BY-NC-ND-4.0",
+    "exception": "credited-community-map",
+    "title": "Construct Small",
+    "author": "Wylie",
+    "source_url": "https://gamebanana.com/mods/60385",
+    "removal_contact": "https://github.com/zees-games/game-playground-maps/issues"
+  },
+  {
+    "paths": [
+      "maps/pgc_smallbase.json"
+    ],
+    "licence": "CC-BY-NC-ND-4.0",
+    "exception": "credited-community-map",
+    "title": "Small Base",
+    "author": "Rouglead",
+    "source_url": "https://gamebanana.com/mods/60684",
+    "removal_contact": "https://github.com/zees-games/game-playground-maps/issues"
+  }
+]
