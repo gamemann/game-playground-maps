@@ -19,7 +19,7 @@ What it does, and why each choice:
   of 0.5 m risers, which a player climbs (the game's climb limit is 1.035 m).
 - Axes: Source is Z-up, godot is (x, z, -y). Scale: 1 unit = 0.01905 m, the family's.
 - Textures are NOT carried. A brush's surface comes from dot-map's shared list
-  (tools/bsp/dotbsp/source_textures.tsv, a new texture goes there and `bsp.py unmapped <bsp>` lists
+  (dot-map-convert/dotbsp/source_textures.tsv, a new texture goes there and `bsp.py unmapped <bsp>` lists
   what it misses); GAME_MATERIAL turns the list's generic ids into this game's materials and
   tints, drawn over Kenney's CC0 Prototype Textures grid like every other map.
 - Tool brushes (skybox, clip, trigger, hint, nodraw-only) are dropped. A water brush becomes a
@@ -33,7 +33,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import bsp_read  # noqa: E402  (also puts dot-map's tools/bsp on sys.path)
+import bsp_read  # noqa: E402  (also puts dot-map-convert on sys.path)
 from dotbsp import boxes as boxes_lib, docboxes, texturemap  # noqa: E402  (the passes and the texture list the map repositories share)
 
 S = 0.01905
